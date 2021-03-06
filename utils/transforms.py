@@ -63,30 +63,17 @@ class Remover_50_100_150_60_120_180Hz:
             tmp = sample[channel_idx, :]
             
             Q = 15.0
+            f0s = [50,60,100,120,150,180]
             
-            f0 = 50
-            b, a = iirnotch(f0, Q, fs)
-            tmp = filtfilt(b, a, tmp)
             
-            f0 = 60
-            b, a = iirnotch(f0, Q, fs)
-            tmp = filtfilt(b, a, tmp)
             
-            f0 = 100
-            b, a = iirnotch(f0, Q, fs)
-            tmp = filtfilt(b, a, tmp)
+            for f0 in f0s:
+                if f0 < (fs/2):
+                    
+                    b, a = iirnotch(f0, Q, fs)
+                    tmp = filtfilt(b, a, tmp)
             
-            f0 = 120
-            b, a = iirnotch(f0, Q, fs)
-            tmp = filtfilt(b, a, tmp)
             
-            f0 = 150
-            b, a = iirnotch(f0, Q, fs)
-            tmp = filtfilt(b, a, tmp)
-            
-            f0 = 180
-            b, a = iirnotch(f0, Q, fs)
-            tmp = filtfilt(b, a, tmp)
             
 
             sample[channel_idx, :] = tmp
@@ -109,3 +96,23 @@ class BaseLineFilter:
         window = windows.blackman(window_size)
         window = window / np.sum(window)
         return fftconvolve(sample, window, mode="same")
+    
+    
+class SnomedToOneHot(object):
+    """Returns one hot encoded labels"""
+    def __init__(self):
+        pass
+
+    def __call__(self, snomed_codes, mapping):
+        encoded_labels = np.zeros(len(mapping)).astype(np.float32)
+        for code in snomed_codes:
+            if code not in mapping:
+                continue
+            else:
+                encoded_labels[mapping[code]] = 1.0
+
+        return encoded_labels    
+    
+    
+    
+    
