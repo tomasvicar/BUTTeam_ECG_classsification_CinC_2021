@@ -20,6 +20,12 @@ class Dataset(data.Dataset):
     def __getitem__(self, idx):
 
         sample = np.load(self.filenames[idx])
+        
+        if np.sum(np.isnan(sample).astype(np.float32))>0:
+            print('nanyyyyy  ' +  self.filenames[idx])
+            sample[np.isnan(sample)] = 0
+
+        
         y = self.onehots[idx]
         
         if self.transform:

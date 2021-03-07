@@ -6,6 +6,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
+import matplotlib.pyplot as plt
 
 from config import Config
 from resave_data import resave_data
@@ -57,6 +58,8 @@ def train_one_model(model_directory,lead_list):
     names_onehot_lens = get_data(file_names)
     
     names_onehot_lens = list(filter(lambda x : x.len < (125 * Config.Fs), names_onehot_lens))
+    
+    # names_onehot_lens = list(filter(lambda x : np.random.rand()<0.15, names_onehot_lens))##############################################♣
     
     names_onehot_lens_train,names_onehot_lens_valid = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
     
@@ -200,9 +203,9 @@ def train_one_model(model_directory,lead_list):
         
         xstr = lambda x:"{:.4f}".format(x)
         info ='model' + str(len(lead_list)) + '_'  + str(epoch) 
-        info += '_' + str(lr)  + '_gpu_' + xstr(np.max(measured_gpu_memory)) + '_train_'  + xstr(log.train_log['challange_metric'][-1]) 
-        info +='_valid_' + xstr(log.test_log['challange_metric'][-1]) + '_validopt_' 
-        info += xstr(log.opt_challange_metric_test[-1]) 
+        info += '_' + str(lr)  + '_gpu_' + xstr(np.max(measured_gpu_memory)) + '_trainCM_'  + xstr(log.train_log['challange_metric'][-1]) 
+        info +='_validCM_' + xstr(log.test_log['challange_metric'][-1]) + '_validoptCM_' + xstr(log.opt_challange_metric_test[-1]) 
+        info += '_trainLoss_'  + xstr(log.train_log['loss'][-1]) + '_validLoss_' + xstr(log.test_log['loss'][-1])
 
         
         print(info)

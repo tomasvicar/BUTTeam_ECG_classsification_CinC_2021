@@ -83,11 +83,13 @@ class Config:
     
     BATCH = 32
     
-    TRANSFORM_DATA_TRAIN = transforms.Compose([
-        transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
-        transforms.RandomStretch(p=0.8, max_stretch=0.2),
-        transforms.RandomShift(p=0.8),
-        ])
+    # TRANSFORM_DATA_TRAIN = transforms.Compose([
+    #     transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
+    #     transforms.RandomStretch(p=0.8, max_stretch=0.2),
+    #     transforms.RandomShift(p=0.8),
+    #     ])
+    
+    TRANSFORM_DATA_TRAIN = None
     
     TRANSFORM_DATA_VALID = None
     
