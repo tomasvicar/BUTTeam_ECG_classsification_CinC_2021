@@ -189,21 +189,9 @@ class Net_addition_grow(nn.Module):
     def save_lens(self,lens):
         self.lens=lens
         
-    def save_train_names(self,train_names):
+    def save_filename_train_valid(self,names_onehot_lens_train,names_onehot_lens_valid):
         
-        tmp=[]
-        for name in train_names['train']:
-            path,filename = os.path.split(name)
-            tmp.append(filename)
-        train_names['train']=tmp
+        self.names_onehot_lens_train = names_onehot_lens_train
         
-        tmp=[]
-        for name in train_names['valid']:
-            path,filename = os.path.split(name)
-            tmp.append(filename)
-        train_names['valid']=tmp
-        
-        self.train_names=train_names
-        
-        
+        self.names_onehot_lens_valid = names_onehot_lens_valid
         

@@ -7,6 +7,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch import optim
 import matplotlib.pyplot as plt
+from shutil import copyfile
 
 from config import Config
 from resave_data import resave_data
@@ -21,8 +22,7 @@ from utils.log import Log
 from utils.adjustLearningRateAndLoss import AdjustLearningRateAndLoss
 from utils.compute_challenge_metric_custom import compute_challenge_metric_custom
 from utils.optimize_ts import optimize_ts
-from shutil import copyfile
-
+from run_model import run_model
 
 def training_code(data_directory, model_directory):
     
@@ -84,6 +84,8 @@ def train_one_model(model_directory,lead_list):
                                   init_conv=Config.INIT_CONV,
                                   filter_size=Config.FILTER_SIZE)
               
+    
+    model.save_filename_train_valid(names_onehot_lens_train,names_onehot_lens_valid)
     model = model.to(Config.DEVICE)
                         
     
@@ -232,25 +234,30 @@ def train_one_model(model_directory,lead_list):
 
 # Load your trained 12-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
 def load_twelve_lead_model(model_directory):
-    filename = os.path.join(model_directory, twelve_lead_model_filename)
+    filename = os.path.join(model_directory, 'final_model12.pt')
     return load_model(filename)
 
 # Load your trained 6-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
 def load_six_lead_model(model_directory):
-    filename = os.path.join(model_directory, six_lead_model_filename)
+    filename = os.path.join(model_directory, 'final_model6.pt')
     return load_model(filename)
 
 # Load your trained 3-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
 def load_three_lead_model(model_directory):
-    filename = os.path.join(model_directory, three_lead_model_filename)
+    filename = os.path.join(model_directory, 'final_model3.pt')
     return load_model(filename)
 
 # Load your trained 2-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
 def load_two_lead_model(model_directory):
-    filename = os.path.join(model_directory, two_lead_model_filename)
+    filename = os.path.join(model_directory, 'final_model2.pt')
     return load_model(filename)
 
-
+def load_model(filename):
+    
+     device = torch.device("cuda:"+str(torch.cuda.current_device()))
+     
+     return torch.load(filename,map_location=device)
+                          
 
 # Run your trained 12-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
 def run_twelve_lead_model(model, header, recording):
@@ -268,9 +275,6 @@ def run_three_lead_model(model, header, recording):
 def run_two_lead_model(model, header, recording):
     return run_model(model, header, recording)
 
-# Generic function for running a trained model.
-def run_model(model, header, recording):
-    pass
 
 
 
