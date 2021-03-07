@@ -45,6 +45,7 @@ class Config:
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
     DATA_PATH = '../data'
+    # DATA_PATH = '../../../cardio_shared/data'
     DATA_RESAVE_PATH = '../data_resave'
     
     
@@ -70,8 +71,15 @@ class Config:
     WEIGHT_DECAY = 1e-5
     
     
-    NUM_WORKERS = 6
-    # NUM_WORKERS = 0
+    # NUM_WORKERS_TRAIN = 7
+    # NUM_WORKERS_VALID = 7
+    
+    
+    NUM_WORKERS_TRAIN = 4
+    NUM_WORKERS_VALID = 2
+    
+    # NUM_WORKERS_TRAIN = 0
+    # NUM_WORKERS_VALID = 0
     
     BATCH = 32
     

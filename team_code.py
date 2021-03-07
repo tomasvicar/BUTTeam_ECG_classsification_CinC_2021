@@ -64,12 +64,12 @@ def train_one_model(model_directory,lead_list):
     
     
     training_set = Dataset( names_onehot_lens_train,transform=Config.TRANSFORM_DATA_TRAIN)
-    training_generator = DataLoader(training_set,batch_size=Config.BATCH,num_workers=Config.NUM_WORKERS,
+    training_generator = DataLoader(training_set,batch_size=Config.BATCH,num_workers=Config.NUM_WORKERS_TRAIN,
                                          shuffle=True,drop_last=True,collate_fn=Dataset.pad_collate )
     
     
     validation_set = Dataset(names_onehot_lens_valid,transform=Config.TRANSFORM_DATA_VALID)
-    validation_generator = DataLoader(validation_set,batch_size=Config.BATCH,num_workers=Config.NUM_WORKERS,
+    validation_generator = DataLoader(validation_set,batch_size=Config.BATCH,num_workers=Config.NUM_WORKERS_VALID,
                                            shuffle=False,drop_last=False,collate_fn=Dataset.pad_collate )
     
     
@@ -99,7 +99,38 @@ def train_one_model(model_directory,lead_list):
             if (it % 50) == 0:
                 print(str(it) + '/' + str(N))
                 
-            step('train',model,pad_seqs,lbls,lens,log,scheduler,w_pos,w_neg,optimizer)
+                
+            type_ = 'train'
+            
+            pad_seqs = pad_seqs.to(Config.DEVICE)
+            lens = lens.to(Config.DEVICE)
+            lbls = lbls.to(Config.DEVICE)
+            
+            
+            res=model(pad_seqs,lens)
+            
+            loss=scheduler.actual_loss(res,lbls,w_pos,w_neg)
+            
+            if type_ == 'train':
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+            
+            loss=loss.detach().cpu().numpy()
+            res=res.detach().cpu().numpy()
+            lbls=lbls.detach().cpu().numpy()
+            lens=lens.detach().cpu().numpy()
+            
+            challange_metric=compute_challenge_metric_custom(res>0.5,lbls)
+            
+            if type_ == 'train':
+                log.append_train([loss,challange_metric])
+            else:
+                log.append_test([loss,challange_metric])
+            
+            
+            
+            
             measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
         
         
@@ -113,7 +144,36 @@ def train_one_model(model_directory,lead_list):
                 if (it % 50) == 0:
                     print(str(it) + '/' + str(N))
                     
-                lbls,res = step('valid',model,pad_seqs,lbls,lens,log,scheduler,w_pos,w_neg,optimizer)
+                type_ = 'valid'
+                
+                
+                pad_seqs = pad_seqs.to(Config.DEVICE)
+                lens = lens.to(Config.DEVICE)
+                lbls = lbls.to(Config.DEVICE)
+                
+                
+                res=model(pad_seqs,lens)
+                
+                loss=scheduler.actual_loss(res,lbls,w_pos,w_neg)
+                
+                if type_ == 'train':
+                    optimizer.zero_grad()
+                    loss.backward()
+                    optimizer.step()
+                
+                loss=loss.detach().cpu().numpy()
+                res=res.detach().cpu().numpy()
+                lbls=lbls.detach().cpu().numpy()
+                lens=lens.detach().cpu().numpy()
+                
+                challange_metric=compute_challenge_metric_custom(res>0.5,lbls)
+                
+                if type_ == 'train':
+                    log.append_train([loss,challange_metric])
+                else:
+                    log.append_test([loss,challange_metric])
+                
+                
                 
                 lbls_all.append(lbls)
                 res_all.append(res)
@@ -167,36 +227,7 @@ def train_one_model(model_directory,lead_list):
         
                 
                 
-def step(type_,model,pad_seqs,lbls,lens,log,scheduler,w_pos,w_neg,optimizer):   
-    
-    pad_seqs = pad_seqs.to(Config.DEVICE)
-    lens = lens.to(Config.DEVICE)
-    lbls = lbls.to(Config.DEVICE)
-    
-    
-    res=model(pad_seqs,lens)
-    
-    loss=scheduler.actual_loss(res,lbls,w_pos,w_neg)
-    
-    if type_ == 'train':
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-    
-    loss=loss.detach().cpu().numpy()
-    res=res.detach().cpu().numpy()
-    lbls=lbls.detach().cpu().numpy()
-    lens=lens.detach().cpu().numpy()
-    
-    challange_metric=compute_challenge_metric_custom(res>0.5,lbls)
-    
-    if type_ == 'train':
-        log.append_train([loss,challange_metric])
-    else:
-        log.append_test([loss,challange_metric])
-        
-    if type_ == 'valid':
-        return lbls,res
+
 
 
 

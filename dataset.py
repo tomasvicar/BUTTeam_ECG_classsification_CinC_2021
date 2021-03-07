@@ -60,7 +60,7 @@ class Dataset(data.Dataset):
     
             # Pass to Torch Tensor
             padded_array = torch.from_numpy(padded_array).float()
-            labels =torch.from_numpy(np.array(list_of_labels)).float() 
+            labels = torch.from_numpy(np.array(list_of_labels)).float() 
             sample_lengths = torch.LongTensor(sample_lengths)
     
             return padded_array, labels, sample_lengths
