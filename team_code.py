@@ -59,7 +59,6 @@ def train_one_model(model_directory,lead_list):
     
     names_onehot_lens = list(filter(lambda x : x.len < (125 * Config.Fs), names_onehot_lens))
     
-    # names_onehot_lens = list(filter(lambda x : np.random.rand()<0.15, names_onehot_lens))##############################################♣
     
     names_onehot_lens_train,names_onehot_lens_valid = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
     
@@ -84,8 +83,9 @@ def train_one_model(model_directory,lead_list):
                                   init_conv=Config.INIT_CONV,
                                   filter_size=Config.FILTER_SIZE)
               
-    
-    model.save_filename_train_valid(names_onehot_lens_train,names_onehot_lens_valid)
+    train_names = [item.name for item in names_onehot_lens_train]
+    valid_names = [item.name for item in names_onehot_lens_valid]
+    model.save_filename_train_valid(train_names,valid_names)
     model = model.to(Config.DEVICE)
                         
     
