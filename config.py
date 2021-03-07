@@ -44,8 +44,8 @@ class Config:
 
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
-    DATA_PATH = '../data'
-    # DATA_PATH = '../../../cardio_shared/data'
+    # DATA_PATH = '../data'
+    DATA_PATH = '../../../cardio_shared/data'
     DATA_RESAVE_PATH = '../data_resave'
     
     
@@ -61,38 +61,39 @@ class Config:
     
     
     LEVELS = 6
-    LVL1_SIZE = 6
+    LVL1_SIZE = 6*2
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
     CONVS_IN_LAYERS = 3
     INIT_CONV = LVL1_SIZE
-    FILTER_SIZE = 3
+    FILTER_SIZE = 7
     
     
     WEIGHT_DECAY = 1e-5
     
     
-    # NUM_WORKERS_TRAIN = 7
-    # NUM_WORKERS_VALID = 7
+    NUM_WORKERS_TRAIN = 7
+    NUM_WORKERS_VALID = 7
     
     
-    NUM_WORKERS_TRAIN = 4
-    NUM_WORKERS_VALID = 2
+    # NUM_WORKERS_TRAIN = 4
+    # NUM_WORKERS_VALID = 2
     
     # NUM_WORKERS_TRAIN = 0
     # NUM_WORKERS_VALID = 0
     
-    BATCH = 32
+    BATCH = 64
     
-    # TRANSFORM_DATA_TRAIN = transforms.Compose([
-    #     transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
-    #     transforms.RandomStretch(p=0.8, max_stretch=0.2),
-    #     transforms.RandomShift(p=0.8),
-    #     ])
+    TRANSFORM_DATA_TRAIN = transforms.Compose([
+        transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
+        transforms.RandomStretch(p=0.8, max_stretch=0.2),
+        transforms.RandomShift(p=0.8),
+        ])
     
-    TRANSFORM_DATA_TRAIN = None
+    # TRANSFORM_DATA_TRAIN = None
     
     TRANSFORM_DATA_VALID = None
     
-
+    T_OPTIMIZE_INIT=250
+    T_OPTIMIZER_GP=50
     
 

@@ -193,8 +193,6 @@ def train_one_model(model_directory,lead_list):
         log.save_opt_challange_metric_test(opt_challenge_metric)
         
         
-        model.set_ts(ts)
-        log.save_opt_challange_metric_test(opt_challenge_metric)
         
         log.save_and_reset()
         
@@ -232,7 +230,47 @@ def train_one_model(model_directory,lead_list):
                 
 
 
+# Load your trained 12-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def load_twelve_lead_model(model_directory):
+    filename = os.path.join(model_directory, twelve_lead_model_filename)
+    return load_model(filename)
 
+# Load your trained 6-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def load_six_lead_model(model_directory):
+    filename = os.path.join(model_directory, six_lead_model_filename)
+    return load_model(filename)
+
+# Load your trained 3-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def load_three_lead_model(model_directory):
+    filename = os.path.join(model_directory, three_lead_model_filename)
+    return load_model(filename)
+
+# Load your trained 2-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def load_two_lead_model(model_directory):
+    filename = os.path.join(model_directory, two_lead_model_filename)
+    return load_model(filename)
+
+
+
+# Run your trained 12-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def run_twelve_lead_model(model, header, recording):
+    return run_model(model, header, recording)
+
+# Run your trained 6-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def run_six_lead_model(model, header, recording):
+    return run_model(model, header, recording)
+
+# Run your trained 3-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def run_three_lead_model(model, header, recording):
+    return run_model(model, header, recording)
+
+# Run your trained 2-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
+def run_two_lead_model(model, header, recording):
+    return run_model(model, header, recording)
+
+# Generic function for running a trained model.
+def run_model(model, header, recording):
+    pass
 
 
 
