@@ -62,6 +62,8 @@ def train_one_model(model_directory,lead_list):
     
     names_onehot_lens_train,names_onehot_lens_valid = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
     
+    lens_all = [item.len for item in names_onehot_lens_train]
+    
     w_pos,w_neg = get_wce_weights(names_onehot_lens_train)
     
     
@@ -185,6 +187,8 @@ def train_one_model(model_directory,lead_list):
                 
                 measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
         
+        
+        model.save_lens(np.stack(lens_all,axis=0))
         
         if epoch>=(MAX_EPOCH-10):
             ts,opt_challenge_metric=optimize_ts(np.concatenate(res_all,axis=0),np.concatenate(lbls_all,axis=0)) 

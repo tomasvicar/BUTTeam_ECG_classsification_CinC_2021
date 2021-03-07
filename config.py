@@ -44,8 +44,8 @@ class Config:
 
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
-    # DATA_PATH = '../data'
-    DATA_PATH = '../../../cardio_shared/data'
+    DATA_PATH = '../data'
+    # DATA_PATH = '../../../cardio_shared/data'
     DATA_RESAVE_PATH = '../data_resave'
     
     
