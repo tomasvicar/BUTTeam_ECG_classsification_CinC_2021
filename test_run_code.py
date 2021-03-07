@@ -56,7 +56,7 @@ if __name__ == '__main__':
     train_names = [os.path.split(name)[1].split('-')[0] for name in model.train_names]
     
 
-    resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data',train_names)
+    # resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data',train_names)
 
     model_directory = Config.DATA_RESAVE_PATH
     data_directory = Config.DATA_RESAVE_PATH + '/test_data'

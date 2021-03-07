@@ -5,7 +5,7 @@ def run_model(model, header, recording):
     
     
     header_tmp = read_header(header,from_file=False)
-    sampling_frequency, resolution, age, sex, snomed_codes = header_tmp
+    sampling_frequency, resolution, age, sex, snomed_codes,leads = header_tmp
     
 
     a = fdgdfgdfgdf
