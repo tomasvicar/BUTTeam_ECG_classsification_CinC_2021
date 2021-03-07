@@ -1,9 +1,31 @@
 import numpy as np
+import random
+import torch
 from scipy.signal import firwin
 from scipy.signal import filtfilt
 from scipy.signal import iirnotch
 from scipy.signal import windows
 from scipy.signal import fftconvolve
+
+
+
+class Compose(object):
+    """Composes several transforms together.
+    Example:
+        transforms.Compose([
+            transforms.HardClip(10),
+            transforms.ToTensor(),
+            ])
+    """
+    def __init__(self, transforms):
+        self.transforms = transforms
+
+    def __call__(self, data_sample, **kwargs):
+        if self.transforms:
+            for t in self.transforms:
+                data_sample = t(data_sample, **kwargs)
+        return data_sample
+
 
 class Resample:
     def __init__(self, output_sampling=500):
@@ -114,5 +136,79 @@ class SnomedToOneHot(object):
         return encoded_labels    
     
     
+    
+class RandomShift:
+    """
+        Class randomly shifts signal within temporal dimension
+    """
+    def __init__(self, p=0):
+        self.probability = p
+
+    def __call__(self, sample, **kwargs):
+        self.sample_length = sample.shape[1]
+        self.sample_channels = sample.shape[0]
+
+        if random.random() < self.probability:
+           
+            shift = torch.randint(self.sample_length, (1, 1)).view(-1).numpy()
+            
+            sample=np.roll(sample, shift, axis=1)
+            
+        return sample
+
+
+class RandomStretch:
+    """
+    Class randomly stretches temporal dimension of signal
+    """
+    def __init__(self, p=0, max_stretch=0.1):
+        self.probability = p
+        self.max_stretch = max_stretch
+
+    def __call__(self, sample, **kwargs):
+        self.sample_length = sample.shape[1]
+        self.sample_channels = sample.shape[0]
+
+        if random.random() < self.probability:
+            relative_change = 1 + torch.rand(1).numpy()[0] * 2 * self.max_stretch - self.max_stretch
+            if relative_change<1:
+                relative_change=1/(1-relative_change+1)
+            
+            
+            new_len = int(relative_change * self.sample_length)
+
+            stretched_sample = np.zeros((self.sample_channels, new_len))
+            for channel_idx in range(self.sample_channels):
+                stretched_sample[channel_idx, :] = np.interp(np.linspace(0, self.sample_length - 1, new_len),
+                                                             np.linspace(0, self.sample_length - 1, self.sample_length),
+                                                             sample[channel_idx, :])
+                
+            sample=stretched_sample
+        return sample
+
+
+class RandomAmplifier:
+    """
+    Class randomly amplifies signal
+    """
+    def __init__(self, p=0, max_multiplier=0.2):
+        self.probability = p
+        self.max_multiplier = max_multiplier
+
+    def __call__(self, sample, **kwargs):
+        self.sample_length = sample.shape[1]
+        self.sample_channels = sample.shape[0]
+
+        if random.random() < self.probability:
+            for channel_idx in range(sample.shape[0]):
+                multiplier = 1 + random.random() * 2 * self.max_multiplier - self.max_multiplier
+                
+                ##mutliply by 2 is same as equvalent to multiply by 0.5 not 0!
+                if multiplier<1:
+                    multiplier=1/(1-multiplier+1)
+                    
+                sample[channel_idx, :] = sample[channel_idx, :] * multiplier
+
+        return sample
     
     

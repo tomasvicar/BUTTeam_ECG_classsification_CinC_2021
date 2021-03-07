@@ -1,5 +1,4 @@
 import torch
-import numpy as np    
 
 
 def wce(res,lbls,w_positive_tensor,w_negative_tensor):
@@ -18,6 +17,8 @@ class Challange_metric_loss:
         self.weights = weights
         
     def __call__(self,res,lbls,w_positive_tensor,w_negative_tensor):
+        
+        weights = self.weights
         
         normalizer=torch.sum(lbls+res-lbls*res,dim=1)
         normalizer[normalizer<1]=1

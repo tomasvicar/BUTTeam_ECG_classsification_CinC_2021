@@ -3,7 +3,8 @@ import pandas
 import numpy as np
 
 from utils.losses import wce,Challange_metric_loss
-from evaluate_model import load_weights
+from utils.utils import load_weights
+from utils import transforms
 
 class Config:
 
@@ -32,12 +33,12 @@ class Config:
     SNOMED2IDX_MAP = {key: idx for idx, key in enumerate(SNOMED2ABB_MAP)}
 
 
-    WEIGHTS = load_weights('weights.csv', list(EQUIVALENT_CLASSES_MAP.items()))# to mi peťulka poradila
+    WEIGHTS = load_weights('weights.csv', list(SNOMED2IDX_MAP.keys()))
     
     
-
-
-
+    MODEL_NOTE = 'first_model'
+    
+    SPLIT_RATIO=[9,1]
 
     Fs = 150
 
@@ -49,22 +50,38 @@ class Config:
     
     BATCH = 32
     
-    MODELS_SEEDS=[42]
+    MODELS_SEED = 42
+    
+        
+    LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
+    LR_CHANGES_LIST = [30,20,10,15,10,10]
+    LOSS_FUNTIONS = [wce,wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
+    MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
     
-    
-    LR_LIST_INIT=np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
-    LR_CHANGES_LIST_INIT=[30,20,10,15,10,10]
-    LOSS_FUNTIONS_INIT=[wce,wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
-    MAX_EPOCH_INIT=np.sum(LR_CHANGES_LIST_INIT)
-    
-    
-    
+    LEVELS = 6
+    LVL1_SIZE = 6
+    OUTPUT_SIZE = len(SNOMED2IDX_MAP)
+    CONVS_IN_LAYERS = 3
+    INIT_CONV = LVL1_SIZE
+    FILTER_SIZE = 3
     
     
+    WEIGHT_DECAY = 1e-5
     
     
+    NUM_WORKERS = 6
+    # NUM_WORKERS = 0
     
+    BATCH = 32
+    
+    TRANSFORM_DATA_TRAIN = transforms.Compose([
+        transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
+        transforms.RandomStretch(p=0.8, max_stretch=0.2),
+        transforms.RandomShift(p=0.8),
+        ])
+    
+    TRANSFORM_DATA_VALID = None
     
 
     
