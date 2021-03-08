@@ -96,4 +96,3 @@ class Config:
     T_OPTIMIZE_INIT=250
     T_OPTIMIZER_GP=50
     
-
