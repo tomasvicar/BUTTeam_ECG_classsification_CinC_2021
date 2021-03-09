@@ -3,6 +3,7 @@ import torch
 
 from utils.read_header import read_header
 from utils.optimize_ts import aply_ts
+from utils import transforms
 
 def run_model(model, header, recording):
     
@@ -17,7 +18,19 @@ def run_model(model, header, recording):
     order = [leads.index(element) for element in leads_cfg]
     
     
-    recording = recording[order,:]/np.expand_dims(np.array(resolution),axis=1)
+    signal = recording[order,:]/np.expand_dims(np.array(resolution),axis=1)
+    
+    
+    resampler = transforms.Resample(output_sampling=model.config.Fs)
+    remover_50_100_150_60_120_180Hz = transforms.Remover_50_100_150_60_120_180Hz()
+    baseLineFilter = transforms.BaseLineFilter()
+    
+    signal = remover_50_100_150_60_120_180Hz(signal,input_sampling=sampling_frequency)
+    
+    signal = resampler(signal,input_sampling=sampling_frequency)
+    
+    signal = baseLineFilter(signal)
+    
     
     
     lens_all = model.lens
@@ -28,7 +41,7 @@ def run_model(model, header, recording):
     random_batch_length = np.max(lens_sample)
     
     
-    reshaped_data,lens = generate_batch(recording, random_batch_length,model.config.Fs)
+    reshaped_data,lens = generate_batch(signal, random_batch_length,model.config.Fs)
     
     data = torch.from_numpy(reshaped_data.copy())
     
