@@ -71,17 +71,17 @@ class Config:
     WEIGHT_DECAY = 1e-5
     
     
-    NUM_WORKERS_TRAIN = 7
-    NUM_WORKERS_VALID = 7
+    # NUM_WORKERS_TRAIN = 7
+    # NUM_WORKERS_VALID = 7
     
     
     # NUM_WORKERS_TRAIN = 4
     # NUM_WORKERS_VALID = 2
     
-    # NUM_WORKERS_TRAIN = 0
-    # NUM_WORKERS_VALID = 0
+    NUM_WORKERS_TRAIN = 0
+    NUM_WORKERS_VALID = 0
     
-    BATCH = 64
+    BATCH = 32
     
     TRANSFORM_DATA_TRAIN = transforms.Compose([
         transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),

@@ -8,6 +8,50 @@ import os
 
 
 
+class myAttention(nn.Module):
+    
+    def __init__(self,in_size, out_size,levels):
+        super().__init__()
+        
+        self.levels
+        
+        self.conv_tanh = nn.Conv1d(in_size, in_size, 1)
+        self.conv_sigm = nn.Conv1d(in_size, in_size, 1)
+        self.conv_w = nn.Conv1d(in_size, out_size, 1)
+        
+        self.conv_final = nn.Conv1d(in_size,out_size,1)
+    
+    def forward(self, inputs,lens):
+        
+        
+        tanh = torch.tanh(self.conv_tanh(inputs))
+        
+        sigm = torch.sigmoid(self.conv_sigm(inputs))
+        
+        z = self.conv_w(tanh * sigm) 
+        
+        
+        for signal_num in range(list(z.size())[0]):
+            
+            k=int(np.floor(lens[signal_num].cpu().numpy()/(2**(self.levels-1))))
+            
+            z[signal_num,:,k:]=-np.Inf
+        
+        
+        a = torch.softmax(z,dim=2,keepdim=True)
+        
+        
+        output = self.conv_final(inputs)
+        output = output * a
+        
+        a2 = output
+        
+        output = torch.sum(output,dim=2)
+        
+
+        return output,a,a2
+
+
 
 
 
@@ -84,7 +128,7 @@ class Net_addition_grow(nn.Module):
 
         self.conv_final=myConv(int(lvl1_size*(self.levels))+int(lvl1_size*(self.levels))+init_conv, int(lvl1_size*self.levels),filter_size=filter_size)
         
-        self.fc=nn.Linear(int(lvl1_size*self.levels), self.output_size)
+        self.attention = myAttention
         
         
         
