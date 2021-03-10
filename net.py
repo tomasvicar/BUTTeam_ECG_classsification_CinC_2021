@@ -5,6 +5,30 @@ import numpy as np
 from torch.nn import init
 import matplotlib.pyplot as plt
 import os
+from torch.nn import TransformerEncoder
+from torch.nn import TransformerEncoderLayer
+
+
+class PositionalEncoding(nn.Module):
+
+    def __init__(self, d_model, max_len=1000):
+        super(PositionalEncoding, self).__init__()
+
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-np.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0).transpose(0, 1)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        x = x + self.pe[:x.size(0), :]
+        return x
+
+
+
+
 
 
 
@@ -96,7 +120,7 @@ class Net_addition_grow(nn.Module):
         return self.ts
     
     
-    def __init__(self, levels=7,lvl1_size=4,input_size=12,output_size=24,convs_in_layer=3,init_conv=4,filter_size=13):
+    def __init__(self, levels=7,lvl1_size=4,input_size=12,output_size=24,convs_in_layer=3,init_conv=4,filter_size=13,nhid = 2048,nlayers = 8,nhead = 8):
         super().__init__()
         self.levels=levels
         self.lvl1_size=lvl1_size
@@ -109,7 +133,6 @@ class Net_addition_grow(nn.Module):
         
         
         self.init_conv=myConv(input_size,init_conv,filter_size=filter_size)
-        
         
         self.layers=nn.ModuleList()
         for lvl_num in range(self.levels):
@@ -125,6 +148,15 @@ class Net_addition_grow(nn.Module):
 
 
         self.conv_final=myConv(int(lvl1_size*(self.levels))+int(lvl1_size*(self.levels))+init_conv, int(lvl1_size*self.levels),filter_size=filter_size)
+        
+        
+        self.pos_enc = PositionalEncoding(int(lvl1_size*self.levels))
+        
+        
+        
+        encoder_layers = TransformerEncoderLayer(int(lvl1_size*self.levels), nhead, nhid, dropout=0.1)
+        self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)
+        
         
         self.attention = myAttention(int(lvl1_size*self.levels),output_size,self.levels)
         
@@ -193,8 +225,16 @@ class Net_addition_grow(nn.Module):
         x=self.conv_final(x)
         x = x * (1 - remove_matrix)
 
-            
+        x = x.permute(2, 0, 1)
+        # remove_matrix = remove_matrix.permute(2, 0, 1)
+
+        x = self.pos_enc(x)
         
+        tmp_mask = remove_matrix[:,0,:]
+        x = self.transformer_encoder(x,src_key_padding_mask = tmp_mask==1)
+        
+        x = x.permute(1, 2, 0)
+        # remove_matrix = remove_matrix.permute(1, 2, 0)
         
         x, a1, a2 = self.attention(x,remove_matrix)
         

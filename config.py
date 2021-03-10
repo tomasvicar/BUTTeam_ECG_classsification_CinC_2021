@@ -41,6 +41,7 @@ class Config:
     SPLIT_RATIO=[9,1]
 
     Fs = 150
+    MAX_LEN = 125 #sec
 
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
@@ -50,6 +51,7 @@ class Config:
     
     
     # BATCH = 32
+    # BATCH = 8
     BATCH = 64
     
     MODELS_SEED = 42
@@ -61,13 +63,16 @@ class Config:
     MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
     
-    LEVELS = 6
-    LVL1_SIZE = 6*2
+    LEVELS = 5
+    LVL1_SIZE = 6
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
     CONVS_IN_LAYERS = 3
     INIT_CONV = LVL1_SIZE
     FILTER_SIZE = 7
-    
+
+    NHID = 2048
+    NLAYERS = 8
+    NHEAD = 6
     
     WEIGHT_DECAY = 1e-5
     
@@ -95,4 +100,5 @@ class Config:
     
     T_OPTIMIZE_INIT=250
     T_OPTIMIZER_GP=50
+    
     

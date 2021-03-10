@@ -27,7 +27,13 @@ def compute_challenge_metric_custom(res,lbls,normalize=True):
     inactive_outputs[:, normal_index] = 1
     inactive_score=np.sum(weights*get_confusion(lbls,inactive_outputs))
     
-    normalized_score = float(observed_score - inactive_score) / float(correct_score - inactive_score)
+    if float(correct_score - inactive_score) != 0:
+        normalized_score = (float(observed_score - inactive_score) / float(correct_score - inactive_score))  
+    else:
+        normalized_score = 0
+        print('zero division score')
+    
+    # normalized_score = (float(observed_score - inactive_score) / float(correct_score - inactive_score))
     
     return normalized_score
 

@@ -60,7 +60,7 @@ def train_one_model(model_directory,lead_list):
     
     names_onehot_lens = get_data(file_names)
     
-    names_onehot_lens = list(filter(lambda x : x.len < (125 * Config.Fs), names_onehot_lens))
+    names_onehot_lens = list(filter(lambda x : x.len < (Config.MAX_LEN * Config.Fs), names_onehot_lens))
     
     
     names_onehot_lens_train,names_onehot_lens_valid = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
@@ -86,7 +86,11 @@ def train_one_model(model_directory,lead_list):
                                   output_size=Config.OUTPUT_SIZE,
                                   convs_in_layer=Config.CONVS_IN_LAYERS,
                                   init_conv=Config.INIT_CONV,
-                                  filter_size=Config.FILTER_SIZE)
+                                  filter_size=Config.FILTER_SIZE,
+                                  nhid = Config.NHID,
+                                  nlayers = Config.NLAYERS,
+                                  nhead = Config.NHEAD,
+                                  )
               
     train_names = [item.name for item in names_onehot_lens_train]
     valid_names = [item.name for item in names_onehot_lens_valid]
