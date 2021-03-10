@@ -60,7 +60,7 @@ def train_one_model(model_directory,lead_list):
     
     names_onehot_lens = get_data(file_names)
     
-    names_onehot_lens = list(filter(lambda x : x.len < (125 * Config.Fs), names_onehot_lens))
+    names_onehot_lens = list(filter(lambda x : x.len < (Config.MAX_LEN * Config.Fs), names_onehot_lens))
     
     
     names_onehot_lens_train,names_onehot_lens_valid = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)

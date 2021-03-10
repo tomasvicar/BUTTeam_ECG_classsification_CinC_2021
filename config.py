@@ -41,6 +41,7 @@ class Config:
     SPLIT_RATIO=[9,1]
 
     Fs = 150
+    MAX_LEN = 125 #sec
 
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
@@ -71,17 +72,16 @@ class Config:
     WEIGHT_DECAY = 1e-5
     
     
-    NUM_WORKERS_TRAIN = 7
-    NUM_WORKERS_VALID = 7
+    # NUM_WORKERS_TRAIN = 7
+    # NUM_WORKERS_VALID = 7
     
     
     # NUM_WORKERS_TRAIN = 4
     # NUM_WORKERS_VALID = 2
     
-    # NUM_WORKERS_TRAIN = 0
-    # NUM_WORKERS_VALID = 0
+    NUM_WORKERS_TRAIN = 0
+    NUM_WORKERS_VALID = 0
     
-    BATCH = 32
     
     TRANSFORM_DATA_TRAIN = transforms.Compose([
         transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
