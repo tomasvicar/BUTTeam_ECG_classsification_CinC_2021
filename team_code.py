@@ -27,7 +27,7 @@ from run_model import run_model
 def training_code(data_directory, model_directory):
     
     
-    if not os.path.isdir(model_directory):
+    if not os.path.isdir(model_directory + '/2'):
         resave_data(data_directory,model_directory)
     
     if not os.path.isdir(model_directory + '/models'):
@@ -48,9 +48,12 @@ def train_one_model(model_directory,lead_list):
     MAX_EPOCH = Config.MAX_EPOCH
     WEIGHT_DECAY = Config.WEIGHT_DECAY
     
-    nvidia_smi.nvmlInit()
-    measured_gpu_memory = []
-    measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
+    try:
+        nvidia_smi.nvmlInit()
+        measured_gpu_memory = []
+        measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
+    except:
+        measured_gpu_memory = []
     
 
     file_names = glob(model_directory + '/' + str(len(lead_list)) + "/**/*.npy", recursive=True)
@@ -137,9 +140,10 @@ def train_one_model(model_directory,lead_list):
             
             
             
-            
-            measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
-        
+            try:
+                measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
+            except:
+                 measured_gpu_memory.append(0)
         
         model.eval() 
         res_all=[]
@@ -185,7 +189,10 @@ def train_one_model(model_directory,lead_list):
                 lbls_all.append(lbls)
                 res_all.append(res)
                 
-                measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
+                try:
+                    measured_gpu_memory.append(get_gpu_memory(nvidia_smi))
+                except:
+                     measured_gpu_memory.append(0)
         
         
         model.save_lens(np.stack(lens_all,axis=0))
