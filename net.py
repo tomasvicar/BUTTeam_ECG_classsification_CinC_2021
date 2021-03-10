@@ -13,7 +13,7 @@ class myAttention(nn.Module):
     def __init__(self,in_size, out_size,levels):
         super().__init__()
         
-        self.levels
+        self.levels = levels
         
         self.conv_tanh = nn.Conv1d(in_size, in_size, 1)
         self.conv_sigm = nn.Conv1d(in_size, in_size, 1)
@@ -38,7 +38,7 @@ class myAttention(nn.Module):
             z[signal_num,:,k:]=-np.Inf
         
         
-        a = torch.softmax(z,dim=2,keepdim=True)
+        a = torch.softmax(z,dim=2)
         
         
         output = self.conv_final(inputs)
@@ -99,7 +99,7 @@ class Net_addition_grow(nn.Module):
         return self.ts
     
     
-    def __init__(self, levels=7,lvl1_size=4,input_size=12,output_size=9,convs_in_layer=3,init_conv=4,filter_size=13):
+    def __init__(self, levels=7,lvl1_size=4,input_size=12,output_size=24,convs_in_layer=3,init_conv=4,filter_size=13):
         super().__init__()
         self.levels=levels
         self.lvl1_size=lvl1_size
@@ -108,6 +108,7 @@ class Net_addition_grow(nn.Module):
         self.convs_in_layer=convs_in_layer
         self.filter_size=filter_size
         
+        self.get_atttention = 0
         
         
         self.init_conv=myConv(input_size,init_conv,filter_size=filter_size)
@@ -128,13 +129,14 @@ class Net_addition_grow(nn.Module):
 
         self.conv_final=myConv(int(lvl1_size*(self.levels))+int(lvl1_size*(self.levels))+init_conv, int(lvl1_size*self.levels),filter_size=filter_size)
         
-        self.attention = myAttention
+        self.attention = myAttention(int(lvl1_size*self.levels),output_size,self.levels)
         
         
         
         
         ## weigths initialization wih xavier method
         for i, m in enumerate(self.modules()):
+            # if isinstance(m, nn.Conv1d) or isinstance(m, nn.Conv2d) or isinstance(m, nn.Conv3d):
             if isinstance(m, nn.Conv2d):
                 init.xavier_normal_(m.weight)
                 init.constant_(m.bias, 0)
@@ -201,28 +203,19 @@ class Net_addition_grow(nn.Module):
         x=self.conv_final(x)
         
         ### replace padded parts of signals by -inf => it will be not used in poolig
-        for signal_num in range(list(x.size())[0]):
-            
-            k=int(np.floor(lens[signal_num].cpu().numpy()/(2**(self.levels-1))))
-            
-            x[signal_num,:,k:]=-np.Inf
+
             
         
         
-        x=F.adaptive_max_pool1d(x,1)
+        x, a1, a2 = self.attention(x,lens)
         
-        
-        # N,C,1
-        
-        x=x.view(list(x.size())[:2])
-        
-        # N,C
-        
-        x=self.fc(x)
-        
+
         x=torch.sigmoid(x)
         
-        return x   
+        if self.get_atttention == 0:
+            return x   
+        else:
+            return x, a1, a2
     
     def save_log(self,log):
         self.log=log
