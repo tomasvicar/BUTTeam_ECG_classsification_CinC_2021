@@ -70,8 +70,8 @@ class Config:
     INIT_CONV = LVL1_SIZE
     FILTER_SIZE = 7
 
-    NHID = 2048
-    NLAYERS = 8
+    NHID = 500
+    NLAYERS = 4
     NHEAD = 6
     
     WEIGHT_DECAY = 1e-5
