@@ -63,7 +63,7 @@ class Dataset(data.Dataset):
         padded_array = val * np.ones(shape, dtype=np.float32)
         list_of_labels = []
 
-        sample_lengths = [len_batch for tmp in sample_lengths]
+        
         
         for idx, sample in enumerate(batch):
             idx_pos = 0
@@ -73,6 +73,8 @@ class Dataset(data.Dataset):
                 padded_array[idx, :, idx_pos:tmp] = sample[0][:,:(tmp - idx_pos)]
                 idx_pos += len_
             list_of_labels.append(sample[1])
+
+        sample_lengths = [len_batch for tmp in sample_lengths]
 
         # Pass to Torch Tensor
         padded_array = torch.from_numpy(padded_array).float()
