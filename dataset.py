@@ -63,7 +63,7 @@ class Dataset(data.Dataset):
         padded_array = val * np.ones(shape, dtype=np.float32)
         list_of_labels = []
 
-        
+        sample_lengths = [len_batch for tmp in sample_lengths]
         
         for idx, sample in enumerate(batch):
             idx_pos = 0

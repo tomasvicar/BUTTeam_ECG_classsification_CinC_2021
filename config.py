@@ -72,15 +72,15 @@ class Config:
     WEIGHT_DECAY = 1e-5
     
     
-    # NUM_WORKERS_TRAIN = 7
-    # NUM_WORKERS_VALID = 7
+    NUM_WORKERS_TRAIN = 7
+    NUM_WORKERS_VALID = 7
     
     
     # NUM_WORKERS_TRAIN = 4
     # NUM_WORKERS_VALID = 2
     
-    NUM_WORKERS_TRAIN = 0
-    NUM_WORKERS_VALID = 0
+    # NUM_WORKERS_TRAIN = 0
+    # NUM_WORKERS_VALID = 0
     
     
     TRANSFORM_DATA_TRAIN = transforms.Compose([
