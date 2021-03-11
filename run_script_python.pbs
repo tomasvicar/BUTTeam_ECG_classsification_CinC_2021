@@ -9,5 +9,6 @@ cd $PBS_O_WORKDIR/
 source /home/user_pool_2/vicar/miniconda3/bin/activate
 conda activate pytorch_vicar
 
+python team_code.py
 python test_run_code.py
 python run_evaluation.py

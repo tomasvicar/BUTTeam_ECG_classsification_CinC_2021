@@ -1,0 +1,3 @@
+qsub -l ncpus=20 -l ngpus=1 -l mem=32gb -l walltime=100:00:00 run_script_python.pbs
+qdel xxxx.gecko
+qstat

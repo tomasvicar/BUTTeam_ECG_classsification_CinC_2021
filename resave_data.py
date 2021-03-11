@@ -56,9 +56,6 @@ def resave_one(filename, src_path ,dst_path):
         np.save(filename_save,signal_tmp)
         
         
-        
-        
-
 def resave_data(src_path,dst_path):
     
     LEAD_LISTS = Config.LEAD_LISTS
@@ -69,9 +66,11 @@ def resave_data(src_path,dst_path):
     
     for lead_list in LEAD_LISTS:
         
+        dst_path_tmp = dst_path + '/' + str(len(lead_list))
+        if not os.path.exists(dst_path_tmp):
+            os.makedirs(dst_path_tmp)
+        
         for subdir_name in subdir_names:
-            
-            dst_path_tmp = dst_path + '/' + str(len(lead_list))
             
             subdir_name_save = subdir_name.replace(src_path,dst_path_tmp)
             

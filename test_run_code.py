@@ -10,7 +10,7 @@ from team_code import load_twelve_lead_model
 from extract_leads_wfdb_custom import extract_leads_wfdb_custom
 
 
-def resave_valid_data(data_path,resave_path,train_names):
+def resave_valid_data(data_path,resave_path,valid_names):
     
     if os.path.isdir(resave_path):
         rmtree(resave_path)
@@ -22,7 +22,7 @@ def resave_valid_data(data_path,resave_path,train_names):
     all_names = glob(data_path + "/**/*.mat", recursive=True)
     all_names_parts = [os.path.split(name)[1].replace('.mat','') for name in all_names]
     
-    inds = [k for k,x in enumerate(all_names_parts) if x not in train_names]
+    inds = [k for k,x in enumerate(all_names_parts) if x in valid_names]
         
     filenames_mat_use = [all_names[k] for k in inds]
     
@@ -37,8 +37,10 @@ def resave_valid_data(data_path,resave_path,train_names):
 def resave_one(filename_mat,data_path,resave_path):
     
     save_filename_mat = resave_path + '/' + os.path.split(filename_mat)[1]
-    copyfile(filename_mat,save_filename_mat)
-    copyfile(filename_mat.replace('.mat','.hea'),save_filename_mat.replace('.mat','.hea'))
+    if not os.path.isfile(save_filename_mat):
+        copyfile(filename_mat,save_filename_mat)
+    if not os.path.isfile(save_filename_mat.replace('.mat','.hea')):
+        copyfile(filename_mat.replace('.mat','.hea'),save_filename_mat.replace('.mat','.hea'))
     
                     
 
@@ -48,18 +50,18 @@ if __name__ == '__main__':
     
     model = load_twelve_lead_model(Config.DATA_RESAVE_PATH)
     
-    train_names = [os.path.split(name)[1].split('-')[0] for name in model.train_names]
+    valid_names = [os.path.split(name)[1].split('-')[0] for name in model.valid_names]
     
 
-    # resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data12',train_names)
+    resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data12',valid_names)
     
-    # for leads in Config.LEAD_LISTS:
-    #     if len(leads) != 12:
-    #         data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + str(len(leads)) 
+    for leads in Config.LEAD_LISTS:
+        if len(leads) != 12:
+            data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + str(len(leads)) 
             
-    #         src_dir = Config.DATA_RESAVE_PATH + '/test_data12'
+            src_dir = Config.DATA_RESAVE_PATH + '/test_data12'
             
-    #         extract_leads_wfdb_custom(src_dir,data_directory,leads)
+            extract_leads_wfdb_custom(src_dir,data_directory,leads)
     
     
     model_directory = Config.DATA_RESAVE_PATH

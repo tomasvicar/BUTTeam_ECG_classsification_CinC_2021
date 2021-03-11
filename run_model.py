@@ -57,9 +57,19 @@ def run_model(model, header, recording):
         data=data.to(device)
     
     
-    score = model(data,lens)
-    score = score.detach().cpu().numpy()
-    label = aply_ts(score,model.get_ts()).astype(np.float32)
+    with torch.no_grad():
+        
+        data_tmp_all = torch.split(data,int(np.ceil(data.size(0)/batch)),dim=0)
+        lens_tmp_all = torch.split(lens,int(np.ceil(lens.size(0)/batch)),dim=0)
+        score_tmp = []
+        for data_tmp,lens_tmp in zip(data_tmp_all,lens_tmp_all):
+            score_tmp.append(model(data_tmp,lens_tmp))
+            
+            
+        score = torch.cat(score_tmp,0)
+        
+        score = score.detach().cpu().numpy()
+        label = aply_ts(score,model.get_ts()).astype(np.float32)
     
     label = merge_labels(label)
     score = merge_labels(score)
@@ -81,8 +91,8 @@ def generate_batch(sample, random_batch_length,len_batch,sampling_freq):
     # Compute number of chunks
     if sample.shape[1]>int(len_batch):
     
-        max_chunk_length = int(80*sampling_freq)
-        overlap = int(sampling_freq * 5)
+        max_chunk_length = int(len_batch)
+        overlap = int(sampling_freq * 0.5)
         num_of_chunks = (sample.shape[1] - overlap) // (max_chunk_length - overlap)
 
     
