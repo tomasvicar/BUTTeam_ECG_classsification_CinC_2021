@@ -51,15 +51,15 @@ if __name__ == '__main__':
     train_names = [os.path.split(name)[1].split('-')[0] for name in model.train_names]
     
 
-    resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data12',train_names)
+    # resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data12',train_names)
     
-    for leads in Config.LEAD_LISTS:
-        if len(leads) != 12:
-            data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + str(len(leads)) 
+    # for leads in Config.LEAD_LISTS:
+    #     if len(leads) != 12:
+    #         data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + str(len(leads)) 
             
-            src_dir = Config.DATA_RESAVE_PATH + '/test_data12'
+    #         src_dir = Config.DATA_RESAVE_PATH + '/test_data12'
             
-            extract_leads_wfdb_custom(src_dir,data_directory,leads)
+    #         extract_leads_wfdb_custom(src_dir,data_directory,leads)
     
     
     model_directory = Config.DATA_RESAVE_PATH

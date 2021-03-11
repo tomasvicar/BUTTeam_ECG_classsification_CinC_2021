@@ -41,7 +41,9 @@ def run_model(model, header, recording):
     random_batch_length = np.max(lens_sample)
     
     
-    reshaped_data,lens = generate_batch(signal, random_batch_length,model.config.Fs)
+    len_batch = model.config.MAX_LEN * model.config.Fs
+    
+    reshaped_data,lens = generate_batch(signal, random_batch_length,len_batch,model.config.Fs)
     
     data = torch.from_numpy(reshaped_data.copy())
     
@@ -72,14 +74,14 @@ def run_model(model, header, recording):
     
     
     
-def generate_batch(sample, random_batch_length,sampling_freq):
+def generate_batch(sample, random_batch_length,len_batch,sampling_freq):
 
     lens=[]
 
     # Compute number of chunks
-    if sample.shape[1]>int(sampling_freq * 105):
+    if sample.shape[1]>int(len_batch):
     
-        max_chunk_length = int(sampling_freq * 90)
+        max_chunk_length = int(80*sampling_freq)
         overlap = int(sampling_freq * 5)
         num_of_chunks = (sample.shape[1] - overlap) // (max_chunk_length - overlap)
 
@@ -88,26 +90,43 @@ def generate_batch(sample, random_batch_length,sampling_freq):
         onsets_list = [idx * (max_chunk_length - overlap) for idx in range(num_of_chunks)]
         offsets_list = [max_chunk_length + idx * (max_chunk_length - overlap) for idx in range(num_of_chunks)]
         offsets_list[-1] = sample.shape[1]
-        max_length = max(random_batch_length, offsets_list[-1] - onsets_list[-1])
-
+        
+        max_length = len_batch
+        
         # Initialize batch
         batch = np.zeros([num_of_chunks, sample.shape[0], max_length])
 
         # Generate batch from sample chunks
         for idx, onset, offset in zip(range(num_of_chunks), onsets_list, offsets_list):
             chunk = sample[:, onset:offset]
-            batch[idx, :, :chunk.shape[1]] = chunk
-            lens.append(chunk.shape[1])
+            
+            idx_pos = 0
+            len_ = chunk.shape[1]
+            while idx_pos < len_batch:
+                tmp = min((idx_pos+len_),batch.shape[2])
+                batch[idx, :, idx_pos:tmp] = chunk[:,:(tmp - idx_pos)]
+                idx_pos += len_
+            
+            
+            lens.append(len_batch)
 
     else:
-        max_length = max(random_batch_length, sample.shape[1])
+        max_length = len_batch
 
         # Initialize batch
         batch = np.zeros([1, sample.shape[0], max_length])
         # Generate batch
-        batch[0, :, :sample.shape[1]] = sample
+        # batch[0, :, :sample.shape[1]] = sample
         
-        lens.append(sample.shape[1])
+        idx_pos = 0
+        len_ = sample.shape[1]
+        while idx_pos < len_batch:
+            tmp = min((idx_pos+len_),batch.shape[2])
+            batch[0, :, idx_pos:tmp] = sample[:,:(tmp - idx_pos)]
+            idx_pos += len_
+        
+        
+        lens.append(len_batch)
 
     return batch.astype(np.float32),lens    
     
