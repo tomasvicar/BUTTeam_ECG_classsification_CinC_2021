@@ -49,7 +49,7 @@ class Config:
     DATA_RESAVE_PATH = '../data_resave'
     
     
-    BATCH = 32
+    BATCH = 64
     
     MODELS_SEED = 42
     
@@ -81,7 +81,6 @@ class Config:
     # NUM_WORKERS_TRAIN = 0
     # NUM_WORKERS_VALID = 0
     
-    BATCH = 64
     
     TRANSFORM_DATA_TRAIN = transforms.Compose([
         transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
