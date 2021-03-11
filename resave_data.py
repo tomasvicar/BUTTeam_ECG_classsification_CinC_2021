@@ -56,9 +56,6 @@ def resave_one(filename, src_path ,dst_path):
         np.save(filename_save,signal_tmp)
         
         
-        
-        
-
 def resave_data(src_path,dst_path):
     
     LEAD_LISTS = Config.LEAD_LISTS
