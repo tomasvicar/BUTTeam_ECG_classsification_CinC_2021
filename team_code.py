@@ -60,10 +60,15 @@ def train_one_model(model_directory,lead_list):
     
     names_onehot_lens = get_data(file_names)
     
-    names_onehot_lens = list(filter(lambda x : x.len < (125 * Config.Fs), names_onehot_lens))
     
     
-    names_onehot_lens_train,names_onehot_lens_valid = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
+    names_onehot_lens_train_all,names_onehot_lens_valid_all = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
+    
+    
+    
+    names_onehot_lens_train = list(filter(lambda x : x.len <= (Config.MAX_LEN * Config.Fs), names_onehot_lens_train_all))
+    names_onehot_lens_valid = list(filter(lambda x : x.len <= (Config.MAX_LEN * Config.Fs), names_onehot_lens_valid_all))
+    
     
     lens_all = [item.len for item in names_onehot_lens_train]
     
@@ -88,8 +93,8 @@ def train_one_model(model_directory,lead_list):
                                   init_conv=Config.INIT_CONV,
                                   filter_size=Config.FILTER_SIZE)
               
-    train_names = [item.name for item in names_onehot_lens_train]
-    valid_names = [item.name for item in names_onehot_lens_valid]
+    train_names = [item.name for item in names_onehot_lens_train_all]
+    valid_names = [item.name for item in names_onehot_lens_valid_all]
     model.save_filename_train_valid(train_names,valid_names)
     model = model.to(Config.DEVICE)
                         

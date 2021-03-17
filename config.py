@@ -36,11 +36,15 @@ class Config:
     WEIGHTS = load_weights('weights.csv', list(SNOMED2IDX_MAP.keys()))
     
     
-    MODEL_NOTE = 'first_model'
+    MODEL_NOTE = 'replication'
     
     SPLIT_RATIO=[9,1]
 
-    Fs = 150
+    Fs = 200
+    # MAX_LEN = 125 #sec - remove stpetersburg
+    # MAX_LEN = 35   ## zbyde 41966/43100
+    # MAX_LEN = 70   ## zbyde 42523/43100
+    MAX_LEN = 20   ## zbyde 40664/43100
 
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
@@ -61,9 +65,9 @@ class Config:
     
     
     LEVELS = 6
-    LVL1_SIZE = 6*2
+    LVL1_SIZE = 6*4
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
-    CONVS_IN_LAYERS = 3
+    CONVS_IN_LAYERS = 3*2
     INIT_CONV = LVL1_SIZE
     FILTER_SIZE = 7
     
@@ -71,15 +75,15 @@ class Config:
     WEIGHT_DECAY = 1e-5
     
     
-    NUM_WORKERS_TRAIN = 7
-    NUM_WORKERS_VALID = 7
+    # NUM_WORKERS_TRAIN = 7
+    # NUM_WORKERS_VALID = 7
     
     
     # NUM_WORKERS_TRAIN = 4
     # NUM_WORKERS_VALID = 2
     
-    # NUM_WORKERS_TRAIN = 0
-    # NUM_WORKERS_VALID = 0
+    NUM_WORKERS_TRAIN = 0
+    NUM_WORKERS_VALID = 0
     
     
     TRANSFORM_DATA_TRAIN = transforms.Compose([
