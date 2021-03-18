@@ -75,23 +75,25 @@ def train_one_model(model_directory,lead_list):
     w_pos,w_neg = get_wce_weights(names_onehot_lens_train)
     
     
-    training_set = Dataset( names_onehot_lens_train,transform=Config.TRANSFORM_DATA_TRAIN)
+    training_set = Dataset( names_onehot_lens_train,transform_nonrep=Config.TRANSFORM_DATA_TRAIN_NONREP,transform_rep=Config.TRANSFORM_DATA_TRAIN_REP)
     training_generator = DataLoader(training_set,batch_size=Config.BATCH,num_workers=Config.NUM_WORKERS_TRAIN,
                                          shuffle=True,drop_last=True,collate_fn=Dataset.pad_collate )
     
     
-    validation_set = Dataset(names_onehot_lens_valid,transform=Config.TRANSFORM_DATA_VALID)
+    validation_set = Dataset(names_onehot_lens_valid,transform_nonrep=Config.TRANSFORM_DATA_VALID_NONREP,transform_rep=Config.TRANSFORM_DATA_VALID_REP)
     validation_generator = DataLoader(validation_set,batch_size=Config.BATCH,num_workers=Config.NUM_WORKERS_VALID,
                                            shuffle=False,drop_last=False,collate_fn=Dataset.pad_collate )
     
     
-    model = net.Net_addition_grow(levels=Config.LEVELS,
-                                  lvl1_size=Config.LVL1_SIZE,
-                                  input_size=len(lead_list),
+    model = net.Net_addition_grow(input_size=len(lead_list),
                                   output_size=Config.OUTPUT_SIZE,
-                                  convs_in_layer=Config.CONVS_IN_LAYERS,
-                                  init_conv=Config.INIT_CONV,
-                                  filter_size=Config.FILTER_SIZE)
+                                  levels=Config.LEVELS,
+                                  lvl1_size=Config.LVL1_SIZE,
+                                  blocks_in_lvl=Config.BLOCKS_IN_LVL,
+                                  convs_in_layer=Config.CONVS_IN_LAYER,
+                                  filter_size=Config.FILTER_SIZE,
+                                  )
+    
               
     train_names = [item.name for item in names_onehot_lens_train_all]
     valid_names = [item.name for item in names_onehot_lens_valid_all]

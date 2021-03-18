@@ -7,13 +7,13 @@ from config import Config
 class Dataset(data.Dataset):
 
 
-    def __init__(self, names_onehot_lens_train, transform=None):
+    def __init__(self, names_onehot_lens_train, transform_nonrep=None,transform_rep=None):
 
         self.filenames = [item.name for item in names_onehot_lens_train]
         self.onehots = [item.onehot for item in names_onehot_lens_train]
         
-        self.transform = transform
-        
+        self.transform_nonrep = transform_nonrep
+        self.transform_rep = transform_rep
         
     def __len__(self):
         return len(self.filenames)
@@ -29,15 +29,14 @@ class Dataset(data.Dataset):
         
         y = self.onehots[idx]
         
-        if self.transform:
-            sample = self.transform(sample)
+        if self.transform_nonrep:
+            sample = self.transform_nonrep(sample)
 
-        sample_length = sample.shape[1]
         
-        return sample, y, sample_length
+        return sample, y, self.transform_rep
 
     @staticmethod
-    def pad_collate(batch,val = 0):
+    def pad_collate(batch,val=0):
         """
         Returns padded mini-batch
         :param batch: (list of tuples): tensor, label
@@ -46,6 +45,7 @@ class Dataset(data.Dataset):
         sample_lengths – origin lengths of input data
         """
         
+        transform_rep = batch[0][2]
         
         batch_size = len(batch)
         # random_idx = random.shuffle(list(range(batch_size-1)))
@@ -73,7 +73,10 @@ class Dataset(data.Dataset):
                 padded_array[idx, :, idx_pos:tmp] = sample[0][:,:(tmp - idx_pos)]
                 idx_pos += len_
             list_of_labels.append(sample[1])
-
+        
+        if transform_rep:
+            padded_array = transform_rep(padded_array)
+        
         sample_lengths = [len_batch for tmp in sample_lengths]
 
         # Pass to Torch Tensor

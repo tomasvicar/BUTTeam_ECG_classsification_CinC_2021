@@ -55,7 +55,7 @@ class Config:
     
     
     # BATCH = 32
-    BATCH = 64
+    BATCH = 8
     
     MODELS_SEED = 42
     
@@ -66,12 +66,14 @@ class Config:
     MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
     
-    LEVELS = 6
-    LVL1_SIZE = 6*4
+    LEVELS = 7
+    LVL1_SIZE = 6*3
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
-    CONVS_IN_LAYERS = 3*2
-    INIT_CONV = LVL1_SIZE
+    CONVS_IN_LAYER = 3
+    BLOCKS_IN_LVL = 4
     FILTER_SIZE = 7
+    
+    
     
     
     WEIGHT_DECAY = 1e-5
@@ -88,17 +90,18 @@ class Config:
     NUM_WORKERS_TRAIN = 0
     NUM_WORKERS_VALID = 0
     
-k
     
-    TRANSFORM_DATA_TRAIN = transforms.Compose([
+    TRANSFORM_DATA_TRAIN_NONREP = transforms.Compose([
         transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
         transforms.RandomStretch(p=0.8, max_stretch=0.2),
+        ])
+    
+    TRANSFORM_DATA_TRAIN_REP = transforms.Compose([
         transforms.RandomShift(p=0.8),
         ])
     
-    # TRANSFORM_DATA_TRAIN = None
-    
-    TRANSFORM_DATA_VALID = None
+    TRANSFORM_DATA_VALID_NONREP = None
+    TRANSFORM_DATA_VALID_REP = None
     
     T_OPTIMIZE_INIT=250
     T_OPTIMIZER_GP=50

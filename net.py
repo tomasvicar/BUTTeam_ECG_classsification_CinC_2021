@@ -96,7 +96,7 @@ class Net_addition_grow(nn.Module):
         return self.ts
     
     
-    def __init__(self, levels=7,lvl1_size=4,input_size=12,output_size=24,convs_in_layer=3,init_conv=4,filter_size=13):
+    def __init__(self,input_size=12,output_size=24,levels=7,lvl1_size=6,blocks_in_lvl=3,convs_in_layer=2,filter_size=7):
         super().__init__()
         self.levels=levels
         self.lvl1_size=lvl1_size
@@ -104,6 +104,9 @@ class Net_addition_grow(nn.Module):
         self.output_size=output_size
         self.convs_in_layer=convs_in_layer
         self.filter_size=filter_size
+        self.blocks_in_lvl=blocks_in_lvl
+        
+        init_conv=lvl1_size
         
         self.get_atttention = 0
         
@@ -114,14 +117,15 @@ class Net_addition_grow(nn.Module):
         self.layers=nn.ModuleList()
         for lvl_num in range(self.levels):
             
+            for block_num in range(self.blocks_in_lvl):
             
-            if lvl_num==0:
-                self.layers.append(myConv(init_conv, int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
-            else:
-                self.layers.append(myConv(int(lvl1_size*(lvl_num))+int(lvl1_size*(lvl_num))+init_conv, int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
-            
-            for conv_num_in_lvl in range(self.convs_in_layer-1):
-                self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                if block_num==0 and lvl_num>0:
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num))+int(lvl1_size*(lvl_num))+init_conv, int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                else:
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1))+int(lvl1_size*(lvl_num+1))+init_conv, int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                
+                for conv_num_in_lvl in range(self.convs_in_layer-1):
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
 
 
         self.conv_final=myConv(int(lvl1_size*(self.levels))+int(lvl1_size*(self.levels))+init_conv, int(lvl1_size*self.levels),filter_size=filter_size)
@@ -168,22 +172,25 @@ class Net_addition_grow(nn.Module):
         x = x * (1 - remove_matrix)
         
         x0=x
+
+        
+        x=torch.cat((x0,x,x),1)
         
         ## aply all convolutions
         layer_num=-1
         for lvl_num in range(self.levels):
+            for block_num in range(self.blocks_in_lvl):
             
-            
-            for conv_num_in_lvl in range(self.convs_in_layer):
-                layer_num+=1
-                if conv_num_in_lvl==1:
-                    y=x
-                
-                x=self.layers[layer_num](x)
-                x = x * (1 - remove_matrix)
-                
-            ## skip conection to previous layer and to the input
-            x=torch.cat((F.avg_pool1d(x0,2**lvl_num,2**lvl_num),x,y),1)
+                for conv_num_in_block in range(self.convs_in_layer):
+                    layer_num+=1
+                    if conv_num_in_block==1:
+                        y=x
+                    
+                    x=self.layers[layer_num](x)
+                    x = x * (1 - remove_matrix)
+                    
+                ## skip conection to previous layer and to the input
+                x=torch.cat((F.avg_pool1d(x0,2**lvl_num,2**lvl_num),x,y),1)
             
             x = F.max_pool1d(x, 2, 2)
             remove_matrix = F.max_pool1d(remove_matrix, 2, 2)
