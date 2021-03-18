@@ -36,7 +36,8 @@ class Config:
     WEIGHTS = load_weights('weights.csv', list(SNOMED2IDX_MAP.keys()))
     
     
-    MODEL_NOTE = 'replication'
+    MODEL_NOTE = 'replica_att'
+
     
     SPLIT_RATIO=[9,1]
 
@@ -53,6 +54,7 @@ class Config:
     DATA_RESAVE_PATH = '../data_resave'
     
     
+    # BATCH = 32
     BATCH = 64
     
     MODELS_SEED = 42
@@ -82,9 +84,11 @@ class Config:
     # NUM_WORKERS_TRAIN = 4
     # NUM_WORKERS_VALID = 2
     
+
     NUM_WORKERS_TRAIN = 0
     NUM_WORKERS_VALID = 0
     
+k
     
     TRANSFORM_DATA_TRAIN = transforms.Compose([
         transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
