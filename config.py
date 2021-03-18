@@ -69,11 +69,11 @@ class Config:
     
     
     LEVELS = 7
-    LVL1_SIZE = 6*7
+    LVL1_SIZE = 6*6
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
     CONVS_IN_LAYER = 3
     BLOCKS_IN_LVL = 3
-    FILTER_SIZE = 7
+    FILTER_SIZE = 3
     
     # DO = 0.3
     DO = None
