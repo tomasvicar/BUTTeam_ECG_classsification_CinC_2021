@@ -92,6 +92,7 @@ def train_one_model(model_directory,lead_list):
                                   blocks_in_lvl=Config.BLOCKS_IN_LVL,
                                   convs_in_layer=Config.CONVS_IN_LAYER,
                                   filter_size=Config.FILTER_SIZE,
+                                  do = Config.DO
                                   )
     
               

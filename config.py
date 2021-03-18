@@ -69,13 +69,14 @@ class Config:
     
     
     LEVELS = 7
-    LVL1_SIZE = 6*4
+    LVL1_SIZE = 6*6
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
     CONVS_IN_LAYER = 3
-    BLOCKS_IN_LVL = 5
+    BLOCKS_IN_LVL = 6
     FILTER_SIZE = 3
     
-    
+    DO = 0.3
+    # DO = None
     
     
     WEIGHT_DECAY = 1e-5
@@ -94,8 +95,8 @@ class Config:
     
     
     TRANSFORM_DATA_TRAIN_NONREP = transforms.Compose([
-        transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
-        transforms.RandomStretch(p=0.8, max_stretch=0.2),
+        transforms.RandomAmplifier(p=0.8,max_multiplier=0.5),
+        transforms.RandomStretch(p=0.8, max_stretch=0.3),
         ])
     
     TRANSFORM_DATA_TRAIN_REP = transforms.Compose([

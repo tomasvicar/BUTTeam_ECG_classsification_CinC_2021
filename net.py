@@ -51,7 +51,7 @@ class myAttention(nn.Module):
 
 
 class myConv(nn.Module):
-    def __init__(self, in_size, out_size,filter_size=3,stride=1,pad=None,do_batch=1,dov=0):
+    def __init__(self, in_size, out_size,filter_size=3,stride=1,pad=None,do_batch=1,dov=None):
         super().__init__()
         
         pad=int((filter_size-1)/2)
@@ -62,7 +62,7 @@ class myConv(nn.Module):
         self.bn=nn.BatchNorm1d(out_size,momentum=0.1)
         
         
-        if self.dov>0:
+        if self.dov:
             self.do=nn.Dropout(dov)
             
     def swish(self,x):
@@ -78,7 +78,7 @@ class myConv(nn.Module):
         # outputs=self.swish(outputs)
         
         
-        if self.dov>0:
+        if self.dov:
             outputs = self.do(outputs)
             
             
@@ -96,7 +96,7 @@ class Net_addition_grow(nn.Module):
         return self.ts
     
     
-    def __init__(self,input_size=12,output_size=24,levels=7,lvl1_size=6,blocks_in_lvl=3,convs_in_layer=2,filter_size=7):
+    def __init__(self,input_size=12,output_size=24,levels=7,lvl1_size=6,blocks_in_lvl=3,convs_in_layer=2,filter_size=7,do=None):
         super().__init__()
         self.levels=levels
         self.lvl1_size=lvl1_size
@@ -105,6 +105,7 @@ class Net_addition_grow(nn.Module):
         self.convs_in_layer=convs_in_layer
         self.filter_size=filter_size
         self.blocks_in_lvl=blocks_in_lvl
+        self.do = do
         
         init_conv=lvl1_size
         
@@ -120,14 +121,14 @@ class Net_addition_grow(nn.Module):
             for block_num in range(self.blocks_in_lvl):
             
                 if block_num==0 and lvl_num>0:
-                    self.layers.append(myConv(int(lvl1_size*(lvl_num)), int(lvl1_size*(lvl_num+1)),filter_size=1))
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num)), int(lvl1_size*(lvl_num+1)),filter_size=1,dov=do))
                     
-                    self.layers.append(myConv(int(lvl1_size*(lvl_num)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size,dov=do))
                 else:
-                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size,dov=do))
                 
                 for conv_num_in_lvl in range(self.convs_in_layer-1):
-                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size,dov=do))
 
 
         self.conv_final=myConv(int(lvl1_size*(self.levels)), int(lvl1_size*self.levels),filter_size=filter_size)
