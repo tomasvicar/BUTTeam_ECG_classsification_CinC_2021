@@ -75,7 +75,8 @@ class Dataset(data.Dataset):
             list_of_labels.append(sample[1])
         
         if transform_rep:
-            padded_array = transform_rep(padded_array)
+            for idx in range(len(batch)):
+                padded_array[idx, :, :] = transform_rep(padded_array[idx, :, :])
         
         sample_lengths = [len_batch for tmp in sample_lengths]
 
