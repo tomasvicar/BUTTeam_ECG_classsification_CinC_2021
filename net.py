@@ -120,15 +120,17 @@ class Net_addition_grow(nn.Module):
             for block_num in range(self.blocks_in_lvl):
             
                 if block_num==0 and lvl_num>0:
-                    self.layers.append(myConv(int(lvl1_size*(lvl_num))+int(lvl1_size*(lvl_num))+init_conv, int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num)), int(lvl1_size*(lvl_num+1)),filter_size=1))
+                    
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
                 else:
-                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1))+int(lvl1_size*(lvl_num+1))+init_conv, int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
+                    self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
                 
                 for conv_num_in_lvl in range(self.convs_in_layer-1):
                     self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size))
 
 
-        self.conv_final=myConv(int(lvl1_size*(self.levels))+int(lvl1_size*(self.levels))+init_conv, int(lvl1_size*self.levels),filter_size=filter_size)
+        self.conv_final=myConv(int(lvl1_size*(self.levels)), int(lvl1_size*self.levels),filter_size=filter_size)
         
         self.attention = myAttention(int(lvl1_size*self.levels),output_size,self.levels)
         
@@ -171,26 +173,29 @@ class Net_addition_grow(nn.Module):
         x=self.init_conv(x)
         x = x * (1 - remove_matrix)
         
-        x0=x
-
-        
-        x=torch.cat((x0,x,x),1)
         
         ## aply all convolutions
         layer_num=-1
         for lvl_num in range(self.levels):
             for block_num in range(self.blocks_in_lvl):
             
-                for conv_num_in_block in range(self.convs_in_layer):
-                    layer_num+=1
-                    if conv_num_in_block==1:
-                        y=x
+                y = x
+                
+                if block_num ==0 and lvl_num>0:
                     
+                    layer_num+=1
+                    y=self.layers[layer_num](y)
+                    y = y * (1 - remove_matrix)
+                    
+                
+                for conv_num_in_block in range(self.convs_in_layer):
+                    
+                    layer_num+=1
                     x=self.layers[layer_num](x)
                     x = x * (1 - remove_matrix)
                     
                 ## skip conection to previous layer and to the input
-                x=torch.cat((F.avg_pool1d(x0,2**lvl_num,2**lvl_num),x,y),1)
+                x = x + y
             
             x = F.max_pool1d(x, 2, 2)
             remove_matrix = F.max_pool1d(remove_matrix, 2, 2)
