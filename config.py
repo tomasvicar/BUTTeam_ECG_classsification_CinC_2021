@@ -43,9 +43,9 @@ class Config:
 
     Fs = 200
     # MAX_LEN = 125 #sec - remove stpetersburg
-    # MAX_LEN = 35   ## zbyde 41966/43100
+    MAX_LEN = 35   ## zbyde 41966/43100
     # MAX_LEN = 70   ## zbyde 42523/43100
-    MAX_LEN = 20   ## zbyde 40664/43100
+    # MAX_LEN = 20   ## zbyde 40664/43100
 
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
