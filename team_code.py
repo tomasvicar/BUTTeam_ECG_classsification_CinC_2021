@@ -135,9 +135,8 @@ def train_one_model(model_directory,lead_list):
                 pad_seqs_tmp_list.append(pad_seqs_tmp)
         
             pad_seqs = torch.cat(pad_seqs_tmp_list,0)
-            lens = lens.repeat(4)
-            lbls = lbls.repeat(4,1)
-            
+
+
             pad_seqs = pad_seqs.to(Config.DEVICE)
             lens = lens.to(Config.DEVICE)
             lbls = lbls.to(Config.DEVICE)
@@ -197,9 +196,7 @@ def train_one_model(model_directory,lead_list):
                     pad_seqs_tmp_list.append(pad_seqs_tmp)
             
                 pad_seqs = torch.cat(pad_seqs_tmp_list,0)
-                lens = lens.repeat(4)
-                lbls = lbls.repeat(4,1)
-                
+
                 
                 pad_seqs = pad_seqs.to(Config.DEVICE)
                 lens = lens.to(Config.DEVICE)
