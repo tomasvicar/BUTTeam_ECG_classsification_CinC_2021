@@ -34,9 +34,10 @@ def training_code(data_directory, model_directory):
         os.makedirs(model_directory + '/models')
         
         
-    for lead_list in Config.LEAD_LISTS:
+    # for lead_list in Config.LEAD_LISTS:
         
-        train_one_model(model_directory,lead_list)
+    lead_list = Config.LEAD_LISTS[0]
+    train_one_model(model_directory,lead_list)
         
         
         
@@ -120,6 +121,18 @@ def train_one_model(model_directory,lead_list):
                 
             type_ = 'train'
             
+            pad_seqs_tmp_list = []
+            lead_list_12 = Config.LEAD_LISTS[0]
+            for lead_list_tmp in Config.LEAD_LISTS:
+                pad_seqs_tmp = -np.inf * torch.ones_like(pad_seqs)
+                order = [lead_list_12.index(element) for element in lead_list_tmp]
+                pad_seqs_tmp[:,order,:] = pad_seqs[:,order,:]
+                pad_seqs_tmp_list.append(pad_seqs_tmp)
+        
+            pad_seqs = torch.cat(pad_seqs_tmp_list)
+            lens = lens.repeat(4)
+            lbls = lbls.repeat(4,1)
+            
             pad_seqs = pad_seqs.to(Config.DEVICE)
             lens = lens.to(Config.DEVICE)
             lbls = lbls.to(Config.DEVICE)
@@ -164,6 +177,18 @@ def train_one_model(model_directory,lead_list):
                     print(str(it) + '/' + str(N))
                     
                 type_ = 'valid'
+                
+                pad_seqs_tmp_list = []
+                lead_list_12 = Config.LEAD_LISTS[0]
+                for lead_list_tmp in Config.LEAD_LISTS:
+                    pad_seqs_tmp = -np.inf * torch.ones_like(pad_seqs)
+                    order = [lead_list_12.index(element) for element in lead_list_tmp]
+                    pad_seqs_tmp[:,order,:] = pad_seqs[:,order,:]
+                    pad_seqs_tmp_list.append(pad_seqs_tmp)
+            
+                pad_seqs = torch.cat(pad_seqs_tmp_list)
+                lens = lens.repeat(4)
+                lbls = lbls.repeat(4,1)
                 
                 
                 pad_seqs = pad_seqs.to(Config.DEVICE)
@@ -241,8 +266,9 @@ def train_one_model(model_directory,lead_list):
         
         
     best_model_name=log.model_names[np.argmax(log.opt_challange_metric_test)]
-        
-    copyfile(best_model_name,model_directory +'/final_model' + str(len(lead_list))  + '.pt')
+      
+    for lead_list_tmp in Config.LEAD_LISTS:
+        copyfile(best_model_name,model_directory +'/final_model' + str(len(lead_list_tmp))  + '.pt')
         
         
         

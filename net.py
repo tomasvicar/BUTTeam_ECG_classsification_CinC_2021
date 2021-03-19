@@ -7,6 +7,148 @@ import matplotlib.pyplot as plt
 import os
 
 
+# class inputAttention(nn.Module):
+#     def __init__(self,out_size):
+#         super().__init__()
+#         self.out_size = out_size
+        
+#         self.conv1 = myConv(1,out_size,do_batch=0)
+        
+        
+#         self.simple_net = nn.Sequential(myConv(out_size,out_size,do_batch=0),myConv(out_size,out_size,do_batch=0),myConv(out_size,1,do_batch=0))
+        
+        
+        
+#         self.convs = nn.Sequential(myConv(1,out_size,do_batch=0),myConv(out_size,out_size,do_batch=0),myConv(out_size,out_size,do_batch=0))
+
+
+
+#         self.squeeze = nn.AdaptiveAvgPool1d(1)
+        
+#         self.channel_encoding = nn.Parameter(0.001*torch.randn(12,out_size))
+#         # self.channel_encoding.requires_grad = False
+        
+        
+        
+        
+#     def forward(self, inputs):
+        
+#         att = []
+#         input_new = []
+#         for c in range(inputs.size(1)):
+            
+            
+#             x = self.conv1(inputs[:,[c],:])
+            
+#             enc = self.channel_encoding[c,:].view([1,self.out_size,1])
+#             x = x + enc
+            
+#             x = self.simple_net(x)
+            
+#             input_new.append(x)
+            
+#             x = self.convs(x)
+            
+#             x = self.squeeze(x)
+            
+#             x[inputs[:,c,0].detach()==-np.inf,:,:] = -np.inf
+            
+#             att.append(x)
+            
+#         # input_new = torch.cat(input_new,1)
+#         input_new = inputs
+#         att = torch.cat(att,2)
+#         att = torch.softmax(att,2)
+        
+#         att2 = att.view([att.size(0),att.size(1),att.size(2),1])
+#         att2 = att2.repeat(1,1,1,inputs.size(2))
+        
+#         inputs2 = inputs.view([inputs.size(0),1,inputs.size(1),inputs.size(2)])
+#         inputs2 = inputs2.repeat(1,att.size(1),1,1)
+        
+#         input_new2 = input_new.view([inputs.size(0),1,inputs.size(1),inputs.size(2)])
+#         input_new2 = input_new2.repeat(1,att.size(1),1,1)
+        
+#         input_new2[inputs2.detach()==-np.inf] = 0
+        
+#         outputs = input_new2*att2
+#         outputs = torch.sum(outputs,2)
+        
+#         print(torch.sum(outputs))
+        
+#         return outputs
+        
+        
+            
+            
+            
+       
+
+class inputAttention(nn.Module):
+    def __init__(self,out_size):
+        super().__init__()
+        self.out_size = out_size
+        
+        self.conv12 = myConv(12,out_size,do_batch=0)
+        self.conv6 = myConv(6,out_size,do_batch=0)
+        self.conv3 = myConv(3,out_size,do_batch=0)
+        self.conv2 = myConv(2,out_size,do_batch=0)
+        
+        
+        # self.channel_encoding.requires_grad = False
+        
+        
+        
+        
+    def forward(self, inputs):
+
+        
+        
+
+        outputs = []
+        for b in range(inputs.size(0)):
+            
+            noninfs = inputs[b,:,0].detach().cpu().numpy()!=-np.inf
+            num_leads = np.sum(noninfs)
+            
+            noninfs = np.nonzero(noninfs)[0]
+            
+            if  num_leads == 12:
+                tmp = inputs[[b],noninfs,:]
+                tmp = tmp.view([1,tmp.size(0),tmp.size(1)])
+                outputs.append(self.conv12(tmp))
+            elif  num_leads == 6:
+                tmp = inputs[[b],noninfs,:]
+                tmp = tmp.view([1,tmp.size(0),tmp.size(1)])
+                outputs.append(self.conv6(tmp))
+            elif  num_leads == 3:
+                tmp = inputs[[b],noninfs,:]
+                tmp = tmp.view([1,tmp.size(0),tmp.size(1)])
+                outputs.append(self.conv3(tmp))
+            elif  num_leads == 2:
+                tmp = inputs[[b],noninfs,:]
+                tmp = tmp.view([1,tmp.size(0),tmp.size(1)])
+                outputs.append(self.conv2(tmp))
+            else:
+                raise
+                
+                
+                
+            
+            
+        outputs = torch.cat(outputs,0)
+        
+        
+        return outputs    
+       
+        
+            
+            
+            
+            
+        
+        
+
 
 class myAttention(nn.Module):
     
@@ -59,7 +201,8 @@ class myConv(nn.Module):
         self.do_batch=do_batch
         self.dov=dov
         self.conv=nn.Conv1d(in_size, out_size,filter_size,stride,pad,bias=False)
-        self.bn=nn.BatchNorm1d(out_size,momentum=0.1)
+        if self.do_batch:
+            self.bn=nn.BatchNorm1d(out_size,momentum=0.1)
         
         
         if self.dov:
@@ -112,8 +255,9 @@ class Net_addition_grow(nn.Module):
         self.get_atttention = 0
         
         
-        self.init_conv=myConv(input_size,init_conv,filter_size=filter_size)
+        # self.init_conv=myConv(input_size,init_conv,filter_size=filter_size)
         
+        self.inputAttention = inputAttention(lvl1_size)
         
         self.layers=nn.ModuleList()
         for lvl_num in range(self.levels):
@@ -171,7 +315,7 @@ class Net_addition_grow(nn.Module):
         
         
         
-        x=self.init_conv(x)
+        x=self.inputAttention(x)
         x = x * (1 - remove_matrix)
         
         
