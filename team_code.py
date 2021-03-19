@@ -123,13 +123,18 @@ def train_one_model(model_directory,lead_list):
             
             pad_seqs_tmp_list = []
             lead_list_12 = Config.LEAD_LISTS[0]
-            for lead_list_tmp in Config.LEAD_LISTS:
-                pad_seqs_tmp = -np.inf * torch.ones_like(pad_seqs)
+            for b in range(pad_seqs.size(0)):
+                pad_seqs_tmp = -np.inf * torch.ones([1,pad_seqs.size(1),pad_seqs.size(2)])
+                
+                lead_list_tmp = Config.LEAD_LISTS[np.random.randint(0,4)]
+                
                 order = [lead_list_12.index(element) for element in lead_list_tmp]
-                pad_seqs_tmp[:,order,:] = pad_seqs[:,order,:]
+                
+                pad_seqs_tmp[:,order,:] = pad_seqs[b,order,:]
+                
                 pad_seqs_tmp_list.append(pad_seqs_tmp)
         
-            pad_seqs = torch.cat(pad_seqs_tmp_list)
+            pad_seqs = torch.cat(pad_seqs_tmp_list,0)
             lens = lens.repeat(4)
             lbls = lbls.repeat(4,1)
             

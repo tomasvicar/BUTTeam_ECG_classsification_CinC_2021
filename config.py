@@ -56,8 +56,8 @@ class Config:
     DATA_RESAVE_PATH = '../data_resave'
     
     
-    BATCH = 16
-    # BATCH = 64
+    # BATCH = 16
+    BATCH = 32
     
     MODELS_SEED = 42
     
@@ -82,16 +82,16 @@ class Config:
     WEIGHT_DECAY = 1e-5
     
     
-    NUM_WORKERS_TRAIN = 7
-    NUM_WORKERS_VALID = 7
+    # NUM_WORKERS_TRAIN = 7
+    # NUM_WORKERS_VALID = 7
     
     
     # NUM_WORKERS_TRAIN = 4
     # NUM_WORKERS_VALID = 2
     
 
-    # NUM_WORKERS_TRAIN = 0
-    # NUM_WORKERS_VALID = 0
+    NUM_WORKERS_TRAIN = 0
+    NUM_WORKERS_VALID = 0
     
     
     TRANSFORM_DATA_TRAIN_NONREP = transforms.Compose([
