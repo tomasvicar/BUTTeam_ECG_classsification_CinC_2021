@@ -41,9 +41,9 @@ class Config:
     
     SPLIT_RATIO=[9,1]
 
-    Fs = 200
+    Fs = 150
     # MAX_LEN = 125 #sec - remove stpetersburg
-    MAX_LEN = 30   ## zbyde 41966/43100
+    MAX_LEN = 20   ## zbyde 41966/43100
     # MAX_LEN = 70   ## zbyde 42523/43100
     # MAX_LEN = 20   ## zbyde 40664/43100
 
@@ -69,10 +69,10 @@ class Config:
     
     
     LEVELS = 7
-    LVL1_SIZE = 6*4
+    LVL1_SIZE = 6*6
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
     CONVS_IN_LAYER = 3
-    BLOCKS_IN_LVL = 2
+    BLOCKS_IN_LVL = 3
     FILTER_SIZE = 3
     
     # DO = 0.3
