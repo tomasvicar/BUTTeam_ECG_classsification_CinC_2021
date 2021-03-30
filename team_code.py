@@ -63,12 +63,24 @@ def train_one_model(model_directory,lead_list):
     names_onehot_lens = list(filter(lambda x : x.len < (125 * Config.Fs), names_onehot_lens))
     
     
+    def filter_fcn(name):
+        name = os.path.split(name)[1]
+        
+        return name.startswith('A') or name.startswith('Q') or name.startswith('E')
+        
+        
+    
+    names_onehot_lens = list(filter(lambda x : filter_fcn(x.name) , names_onehot_lens))###############♣
+    
+    
     names_onehot_lens_train,names_onehot_lens_valid = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
     
     lens_all = [item.len for item in names_onehot_lens_train]
     
     w_pos,w_neg = get_wce_weights(names_onehot_lens_train)
     
+    
+    w_pos[w_pos>100] = 100
     
     training_set = Dataset( names_onehot_lens_train,transform=Config.TRANSFORM_DATA_TRAIN)
     training_generator = DataLoader(training_set,batch_size=Config.BATCH,num_workers=Config.NUM_WORKERS_TRAIN,
