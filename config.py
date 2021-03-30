@@ -36,19 +36,27 @@ class Config:
     WEIGHTS = load_weights('weights.csv', list(SNOMED2IDX_MAP.keys()))
     
     
-    MODEL_NOTE = 'first_model'
+    MODEL_NOTE = 'replica_att'
+
     
     SPLIT_RATIO=[9,1]
 
     Fs = 150
+    # MAX_LEN = 125 #sec - remove stpetersburg
+    MAX_LEN = 20   ## zbyde 41966/43100
+    # MAX_LEN = 70   ## zbyde 42523/43100
+    # MAX_LEN = 20   ## zbyde 40664/43100
 
     DEVICE=torch.device("cuda:"+str(torch.cuda.current_device()))
     
-    DATA_PATH = '../data'
-    # DATA_PATH = '../../../cardio_shared/data'
+    # DATA_PATH = '../data'
+    DATA_PATH = '../../../cardio_shared/data'
+    
+    
     DATA_RESAVE_PATH = '../data_resave'
     
     
+    # BATCH = 32
     BATCH = 64
     
     MODELS_SEED = 42
@@ -60,12 +68,15 @@ class Config:
     MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
     
-    LEVELS = 6
-    LVL1_SIZE = 6*2
+    LEVELS = 7
+    LVL1_SIZE = 6*8
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
-    CONVS_IN_LAYERS = 3
-    INIT_CONV = LVL1_SIZE
-    FILTER_SIZE = 7
+    CONVS_IN_LAYER = 3
+    BLOCKS_IN_LVL = 3
+    FILTER_SIZE = 3
+    
+    # DO = 0.3
+    DO = None
     
     
     WEIGHT_DECAY = 1e-5
@@ -78,19 +89,22 @@ class Config:
     # NUM_WORKERS_TRAIN = 4
     # NUM_WORKERS_VALID = 2
     
+
     # NUM_WORKERS_TRAIN = 0
     # NUM_WORKERS_VALID = 0
     
     
-    TRANSFORM_DATA_TRAIN = transforms.Compose([
+    TRANSFORM_DATA_TRAIN_NONREP = transforms.Compose([
         transforms.RandomAmplifier(p=0.8,max_multiplier=0.3),
         transforms.RandomStretch(p=0.8, max_stretch=0.2),
+        ])
+    
+    TRANSFORM_DATA_TRAIN_REP = transforms.Compose([
         transforms.RandomShift(p=0.8),
         ])
     
-    # TRANSFORM_DATA_TRAIN = None
-    
-    TRANSFORM_DATA_VALID = None
+    TRANSFORM_DATA_VALID_NONREP = None
+    TRANSFORM_DATA_VALID_REP = None
     
     T_OPTIMIZE_INIT=250
     T_OPTIMIZER_GP=50
