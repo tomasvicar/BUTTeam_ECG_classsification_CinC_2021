@@ -62,10 +62,10 @@ def train_one_model(model_directory,lead_list):
     
     
     
-    def filter_fcn(name):
-        name = os.path.split(name)[1]
+    # def filter_fcn(name):
+    #     name = os.path.split(name)[1]
         
-        return name.startswith('A') or name.startswith('Q') or name.startswith('E')
+    #     return name.startswith('A') or name.startswith('Q') or name.startswith('E')
 
     names_onehot_lens_train_all,names_onehot_lens_valid_all = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
     
@@ -73,8 +73,8 @@ def train_one_model(model_directory,lead_list):
     names_onehot_lens_train = list(filter(lambda x : x.len <= (Config.MAX_LEN * Config.Fs), names_onehot_lens_train_all))
     names_onehot_lens_valid = list(filter(lambda x : x.len <= (Config.MAX_LEN * Config.Fs), names_onehot_lens_valid_all))
     
-    names_onehot_lens_train = list(filter(lambda x : filter_fcn(x.name) , names_onehot_lens_train))###############♣
-    names_onehot_lens_valid = list(filter(lambda x : filter_fcn(x.name) , names_onehot_lens_valid))###############♣
+    # names_onehot_lens_train = list(filter(lambda x : filter_fcn(x.name) , names_onehot_lens_train))###############♣
+    # names_onehot_lens_valid = list(filter(lambda x : filter_fcn(x.name) , names_onehot_lens_valid))###############♣
     
     
     

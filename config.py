@@ -74,22 +74,22 @@ class Config:
     
     
     # BATCH = 32
-    # BATCH = 64
-    BATCH = 16
+    BATCH = 64
+    # BATCH = 16
     
     MODELS_SEED = 42
     
         
-    # LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
-    # LR_CHANGES_LIST = [30,20,10,15,10,10]
-    # LOSS_FUNTIONS = [wce,wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
-    # MAX_EPOCH = np.sum(LR_CHANGES_LIST)
-    
-    
     LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
-    LR_CHANGES_LIST = [2,1,1,1]
-    LOSS_FUNTIONS = [wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
+    LR_CHANGES_LIST = [30,20,10,15,10,10]
+    LOSS_FUNTIONS = [wce,wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
     MAX_EPOCH = np.sum(LR_CHANGES_LIST)
+    
+    
+    # LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
+    # LR_CHANGES_LIST = [2,1,1,1]
+    # LOSS_FUNTIONS = [wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
+    # MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
     
     
@@ -101,10 +101,10 @@ class Config:
     # FILTER_SIZE = 3
     
     LEVELS = 7
-    LVL1_SIZE = 6
+    LVL1_SIZE = 8*3
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
-    CONVS_IN_LAYER = 2
-    BLOCKS_IN_LVL = 2
+    CONVS_IN_LAYER = 3
+    BLOCKS_IN_LVL = 3
     FILTER_SIZE = 3
     
     # DO = 0.3
