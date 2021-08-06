@@ -87,9 +87,13 @@ def resave_data(src_path,dst_path):
 
 
 
-    with Pool() as pool:
-        pool.starmap(resave_one, zip(filenames,src_paths,dst_paths))
+    # with Pool() as pool:
+    #     pool.starmap(resave_one, zip(filenames,src_paths,dst_paths))
         
+    # starmap(resave_one, zip(filenames,src_paths,dst_paths))
+    for filename,src_path,dst_path in zip(filenames,src_paths,dst_paths):
+        resave_one(filename,src_path,dst_path)
+    
         
         
 
@@ -97,7 +101,11 @@ def resave_data(src_path,dst_path):
 
 if __name__ == '__main__':
     
-    src_path = '../data'
+    if os.path.isdir('../data'):
+        src_path = '../data'
+    if os.path.isdir('../../../cardio_shared/data'):    
+        src_path = '../../../cardio_shared/data'
+        
     dst_path = '../data_resave'
     
     resave_data(src_path,dst_path)

@@ -22,7 +22,7 @@ from utils.log import Log
 from utils.adjustLearningRateAndLoss import AdjustLearningRateAndLoss
 from utils.compute_challenge_metric_custom import compute_challenge_metric_custom
 from utils.optimize_ts import optimize_ts
-from run_model import run_model
+from run_model_fcn import run_model_fcn
 
 def training_code(data_directory, model_directory):
     
@@ -68,7 +68,6 @@ def train_one_model(model_directory,lead_list):
         return name.startswith('A') or name.startswith('Q') or name.startswith('E')
 
     names_onehot_lens_train_all,names_onehot_lens_valid_all = train_valid_split(names_onehot_lens,Config.MODELS_SEED,Config.SPLIT_RATIO)
-    
     
     
     names_onehot_lens_train = list(filter(lambda x : x.len <= (Config.MAX_LEN * Config.Fs), names_onehot_lens_train_all))
@@ -263,49 +262,16 @@ def train_one_model(model_directory,lead_list):
                 
 
 
-# Load your trained 12-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def load_twelve_lead_model(model_directory):
-    filename = os.path.join(model_directory, 'final_model12.pt')
-    return load_model(filename)
-
-# Load your trained 6-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def load_six_lead_model(model_directory):
-    filename = os.path.join(model_directory, 'final_model6.pt')
-    return load_model(filename)
-
-# Load your trained 3-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def load_three_lead_model(model_directory):
-    filename = os.path.join(model_directory, 'final_model3.pt')
-    return load_model(filename)
-
-# Load your trained 2-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def load_two_lead_model(model_directory):
-    filename = os.path.join(model_directory, 'final_model2.pt')
-    return load_model(filename)
-
-def load_model(filename):
+def load_model(model_directory, leads):
     
-     device = torch.device("cuda:"+str(torch.cuda.current_device()))
+    filename = os.path.join(model_directory, 'final_model' + str(len(leads)) + '.pt')
+    
+    device = torch.device("cuda:"+str(torch.cuda.current_device()))
      
-     return torch.load(filename,map_location=device)
-                          
+    return torch.load(filename,map_location=device)
 
-# Run your trained 12-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def run_twelve_lead_model(model, header, recording):
-    return run_model(model, header, recording)
-
-# Run your trained 6-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def run_six_lead_model(model, header, recording):
-    return run_model(model, header, recording)
-
-# Run your trained 3-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def run_three_lead_model(model, header, recording):
-    return run_model(model, header, recording)
-
-# Run your trained 2-lead ECG model. This function is *required*. Do *not* change the arguments of this function.
-def run_two_lead_model(model, header, recording):
-    return run_model(model, header, recording)
-
+def run_model(model, header, recording):
+    return run_model_fcn(model, header, recording)
 
 
 
