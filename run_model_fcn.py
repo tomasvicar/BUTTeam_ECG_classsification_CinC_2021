@@ -48,6 +48,18 @@ def run_model_fcn(model, header, recording):
     data = torch.from_numpy(reshaped_data.copy())
     
     lens = torch.from_numpy(np.array(lens).astype(np.float32))
+    
+    
+    lead_list_12 = model.config.LEAD_LISTS[0]
+    lead_list_tmp = leads_cfg
+    
+    data_tmp = -np.inf * torch.ones([data.size(0),12,data.size(2)])
+    order = [lead_list_12.index(element) for element in lead_list_tmp]
+    data_tmp[:,order,:] = data
+    
+    data=data_tmp
+
+    
 
     cuda_check = next(model.parameters()).is_cuda
     if cuda_check:

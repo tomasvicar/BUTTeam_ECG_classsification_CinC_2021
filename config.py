@@ -74,8 +74,9 @@ class Config:
     
     
     # BATCH = 32
-    BATCH = 64
+    BATCH = 60
     # BATCH = 16
+    # BATCH = 10
     
     MODELS_SEED = 42
     
@@ -94,10 +95,10 @@ class Config:
     
     
     # LEVELS = 7
-    # LVL1_SIZE = 6*8
+    # LVL1_SIZE = 2
     # OUTPUT_SIZE = len(SNOMED2IDX_MAP)
-    # CONVS_IN_LAYER = 3
-    # BLOCKS_IN_LVL = 3
+    # CONVS_IN_LAYER = 2
+    # BLOCKS_IN_LVL = 2
     # FILTER_SIZE = 3
     
     LEVELS = 7

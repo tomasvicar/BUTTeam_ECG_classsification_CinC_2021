@@ -1,15 +1,16 @@
 
-
-
 from config import Config
 from evaluate_model import evaluate_model
+import json
+from datetime import datetime
+
 
 
 
 if __name__ == '__main__':
     
     
-    
+    results = dict()
     
     for leads in Config.LEAD_LISTS:
         
@@ -21,5 +22,10 @@ if __name__ == '__main__':
         classes, auroc, auprc, auroc_classes, auprc_classes, accuracy, f_measure, f_measure_classes, challenge_metric = evaluate_model(data_directory, output_directory)
     
         print(str(len(leads)) )
-        print(challenge_metric )
+        print(challenge_metric)
     
+        results[str(len(leads))  + '-' + ','.join(leads)] = challenge_metric
+        
+        
+    with open(Config.DATA_RESAVE_PATH + '/results_' + datetime.now().strftime("%m_%d_%Y__%H_%M_%S") + '.json', 'w') as outfile:
+        json.dump(results, outfile)
