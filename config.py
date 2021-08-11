@@ -74,7 +74,8 @@ class Config:
     
     
     # BATCH = 32
-    BATCH = 60
+    # BATCH = 60
+    BATCH = 40
     # BATCH = 16
     # BATCH = 10
     
@@ -82,7 +83,8 @@ class Config:
     
         
     LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
-    LR_CHANGES_LIST = [30,20,10,15,10,10]
+    # LR_CHANGES_LIST = [30,20,10,15,10,10]
+    LR_CHANGES_LIST = [40,20,10,20,15,10]
     LOSS_FUNTIONS = [wce,wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
     MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
@@ -102,7 +104,8 @@ class Config:
     # FILTER_SIZE = 3
     
     LEVELS = 7
-    LVL1_SIZE = 8*3
+    # LVL1_SIZE = 8*3
+    LVL1_SIZE = 8*6
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
     CONVS_IN_LAYER = 3
     BLOCKS_IN_LVL = 3
