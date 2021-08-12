@@ -47,6 +47,8 @@ def resave_one(filename, src_path ,dst_path):
         
         dst_path_tmp = dst_path + '/' + str(len(lead_list))
         
+        # .replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')
+        
         filename_save = filename.replace(src_path,dst_path_tmp) + '-' + Dxs_string + '-' + str(signal.shape[1]) + '.npy'
         
         use_leads = [fields['sig_name'].index(lead) for lead in lead_list]

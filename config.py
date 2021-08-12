@@ -17,6 +17,8 @@ class Config:
     two_leads = ('I', 'II')
     LEAD_LISTS = (twelve_leads, six_leads, four_leads, three_leads, two_leads)
     
+    
+    LEAD_LISTS=[['I'],['II']]
 
 
     
@@ -72,6 +74,9 @@ class Config:
     
     DATA_RESAVE_PATH = '../data_resave'
     
+    RESULTS_PATH = '../results'
+    
+    
     
     # BATCH = 32
     BATCH = 64
@@ -106,6 +111,8 @@ class Config:
     CONVS_IN_LAYER = 3
     BLOCKS_IN_LVL = 3
     FILTER_SIZE = 3
+    
+
     
     # DO = 0.3
     DO = None

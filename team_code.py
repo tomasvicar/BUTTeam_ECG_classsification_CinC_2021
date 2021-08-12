@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from torch import optim
 import matplotlib.pyplot as plt
 from shutil import copyfile
+import sys
 
 from config import Config
 from resave_data import resave_data
@@ -26,13 +27,15 @@ from run_model_fcn import run_model_fcn
 
 def training_code(data_directory, model_directory):
     
-    
+
     if not os.path.isdir(model_directory + '/2'):
-        resave_data(data_directory,model_directory)
+        
+        resave_data(data_directory,Config.DATA_RESAVE_PATH)
+        
     
     if not os.path.isdir(model_directory + '/models'):
         os.makedirs(model_directory + '/models')
-        
+
         
     for lead_list in Config.LEAD_LISTS:
         
@@ -56,7 +59,7 @@ def train_one_model(model_directory,lead_list):
         measured_gpu_memory = []
     
 
-    file_names = glob(model_directory + '/' + str(len(lead_list)) + "/**/*.npy", recursive=True)
+    file_names = glob(Config.DATA_RESAVE_PATH + '/' + str(len(lead_list)) + "/**/*.npy", recursive=True)
     
     names_onehot_lens = get_data(file_names)
     
@@ -278,8 +281,16 @@ def run_model(model, header, recording):
 
 if __name__ == '__main__':
     
+
+    
+    if len(sys.argv)>1:
+        Config.RESULTS_PATH = sys.argv[1]
+        Config.MODELS_SEED = int(sys.argv[2])
+    
+    
+    
     data_directory = Config.DATA_PATH
-    model_directory = Config.DATA_RESAVE_PATH
+    model_directory = Config.RESULTS_PATH
     
     training_code(data_directory, model_directory)
 

@@ -3,6 +3,7 @@ from glob import glob
 from multiprocessing import Pool
 from shutil import copyfile
 from shutil import rmtree
+import sys
 
 from test_model import test_model
 from config import Config
@@ -46,7 +47,14 @@ def resave_one(filename_mat,data_path,resave_path):
 
 if __name__ == '__main__':
     
-    model = load_model(Config.DATA_RESAVE_PATH,Config.LEAD_LISTS[0])
+    
+    if len(sys.argv)>1:
+        Config.RESULTS_PATH = sys.argv[1]
+        Config.MODELS_SEED = int(sys.argv[2])
+    
+    
+    
+    model = load_model(Config.RESULTS_PATH,Config.LEAD_LISTS[0])
     
     valid_names = [os.path.split(name)[1].split('-')[0] for name in model.valid_names]
     
@@ -62,7 +70,7 @@ if __name__ == '__main__':
             extract_leads_wfdb_custom(src_dir,data_directory,leads)
     
     
-    model_directory = Config.DATA_RESAVE_PATH
+    model_directory = Config.RESULTS_PATH
     
     
         
