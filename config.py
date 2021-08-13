@@ -52,8 +52,8 @@ class Config:
     # MAX_LEN = 10   ## zbyde 81174/88253
     # MAX_LEN = 11   ## zbyde 81863/88253
     # MAX_LEN = 12   ## zbyde 82690/88253
-    MAX_LEN = 15   ## zbyde 84469/88253
-    # MAX_LEN = 20   ## zbyde 85817/88253
+    # MAX_LEN = 15   ## zbyde 84469/88253
+    MAX_LEN = 20   ## zbyde 85817/88253
     # MAX_LEN = 30   ## zbyde 86786/88253
     # MAX_LEN = 40   ## zbyde 87319/88253
     # MAX_LEN = 50   ## zbyde 87526/88253
@@ -81,7 +81,7 @@ class Config:
     
         
     LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
-    LR_CHANGES_LIST = [30,20,10,15,10,10]
+    LR_CHANGES_LIST = [30,10,5,15,10,10]
     LOSS_FUNTIONS = [wce,wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
     MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
@@ -101,7 +101,7 @@ class Config:
     # FILTER_SIZE = 3
     
     LEVELS = 7
-    LVL1_SIZE = 8*3
+    LVL1_SIZE = 8*4
     OUTPUT_SIZE = len(SNOMED2IDX_MAP)
     CONVS_IN_LAYER = 3
     BLOCKS_IN_LVL = 3
