@@ -12,7 +12,7 @@ def run_model_fcn(model, header, recording):
     sampling_frequency, resolution, age, sex, snomed_codes,leads = header_tmp
     
     
-    leads_cfg = [ leads_cfg for leads_cfg in model.config.LEAD_LISTS if len(leads_cfg)==len(leads)][0]
+    leads_cfg = [ leads_cfg for leads_cfg in model.config.LEAD_LISTS if set(leads_cfg)==set(leads)][0]
     
 
     order = [leads.index(element) for element in leads_cfg]

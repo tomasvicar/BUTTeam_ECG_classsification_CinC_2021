@@ -59,13 +59,13 @@ if __name__ == '__main__':
     valid_names = [os.path.split(name)[1].split('-')[0] for name in model.valid_names]
     
 
-    resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data12',valid_names)
+    resave_valid_data(Config.DATA_PATH,Config.DATA_RESAVE_PATH + '/test_data' +  ', '.join(Config.LEAD_LIST12).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'',''),valid_names)
     
     for leads in Config.LEAD_LISTS:
         if len(leads) != 12:
-            data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + str(len(leads)) 
+            data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + ', '.join(leads).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')
             
-            src_dir = Config.DATA_RESAVE_PATH + '/test_data12'
+            src_dir = Config.DATA_RESAVE_PATH + '/test_data'  +  ', '.join(Config.LEAD_LIST12).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')
             
             extract_leads_wfdb_custom(src_dir,data_directory,leads)
     
@@ -77,7 +77,7 @@ if __name__ == '__main__':
         
     for leads in Config.LEAD_LISTS:
         
-        output_directory = Config.DATA_RESAVE_PATH + '/output' + str(len(leads))  
+        output_directory = Config.DATA_RESAVE_PATH + '/output' + ', '.join(leads).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')
     
         if os.path.isdir(output_directory):
             rmtree(output_directory)
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         if not os.path.isdir(output_directory):
             os.makedirs(output_directory)
 
-        data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + str(len(leads))  
+        data_directory = Config.DATA_RESAVE_PATH  + '/test_data' + ', '.join(leads).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','') 
 
         test_model(model_directory, data_directory, output_directory)
         

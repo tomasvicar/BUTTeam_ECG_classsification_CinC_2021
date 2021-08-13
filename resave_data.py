@@ -45,9 +45,9 @@ def resave_one(filename, src_path ,dst_path):
 
     for lead_list in LEAD_LISTS:
         
-        dst_path_tmp = dst_path + '/' + str(len(lead_list))
+        dst_path_tmp = dst_path + '/' + ', '.join(lead_list).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')
         
-        # .replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')
+        # 
         
         filename_save = filename.replace(src_path,dst_path_tmp) + '-' + Dxs_string + '-' + str(signal.shape[1]) + '.npy'
         
@@ -68,7 +68,7 @@ def resave_data(src_path,dst_path):
     
     for lead_list in LEAD_LISTS:
         
-        dst_path_tmp = dst_path + '/' + str(len(lead_list))
+        dst_path_tmp = dst_path + '/' + ', '.join(lead_list).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')
         if not os.path.exists(dst_path_tmp):
             os.makedirs(dst_path_tmp)
         

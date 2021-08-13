@@ -28,7 +28,7 @@ from run_model_fcn import run_model_fcn
 def training_code(data_directory, model_directory):
     
 
-    if not os.path.isdir(model_directory + '/2'):
+    if not os.path.isdir(model_directory):
         
         resave_data(data_directory,Config.DATA_RESAVE_PATH)
         
@@ -59,7 +59,7 @@ def train_one_model(model_directory,lead_list):
         measured_gpu_memory = []
     
 
-    file_names = glob(Config.DATA_RESAVE_PATH + '/' + str(len(lead_list)) + "/**/*.npy", recursive=True)
+    file_names = glob(Config.DATA_RESAVE_PATH + '/' + ', '.join(lead_list).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','') + "/**/*.npy", recursive=True)
     
     names_onehot_lens = get_data(file_names)
     
@@ -235,7 +235,7 @@ def train_one_model(model_directory,lead_list):
         
         
         xstr = lambda x:"{:.4f}".format(x)
-        info ='model' + str(len(lead_list)) + '_'  + str(epoch) 
+        info ='model' + ', '.join(lead_list).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','') + '_'  + str(epoch) 
         info += '_' + str(lr)  + '_gpu_' + xstr(np.max(measured_gpu_memory)) + '_trainCM_'  + xstr(log.train_log['challange_metric'][-1]) 
         info +='_validCM_' + xstr(log.test_log['challange_metric'][-1]) + '_validoptCM_' + xstr(log.opt_challange_metric_test[-1]) 
         info += '_trainLoss_'  + xstr(log.train_log['loss'][-1]) + '_validLoss_' + xstr(log.test_log['loss'][-1])
@@ -256,7 +256,7 @@ def train_one_model(model_directory,lead_list):
         
     best_model_name=log.model_names[np.argmax(log.opt_challange_metric_test)]
         
-    copyfile(best_model_name,model_directory +'/final_model' + str(len(lead_list))  + '.pt')
+    copyfile(best_model_name,model_directory +'/final_model' + ', '.join(lead_list).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','')  + '.pt')
         
         
         
@@ -267,7 +267,7 @@ def train_one_model(model_directory,lead_list):
 
 def load_model(model_directory, leads):
     
-    filename = os.path.join(model_directory, 'final_model' + str(len(leads)) + '.pt')
+    filename = os.path.join(model_directory, 'final_model' + ', '.join(leads).replace('(','').replace(')','').replace(' ','').replace(',','_').replace('\'','') + '.pt')
     
     device = torch.device("cuda:"+str(torch.cuda.current_device()))
      

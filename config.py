@@ -10,15 +10,31 @@ from utils import transforms
 class Config:
 
     
-    twelve_leads = ('I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6')
-    six_leads = ('I', 'II', 'III', 'aVR', 'aVL', 'aVF')
-    four_leads = ('I', 'II', 'III', 'V2')
-    three_leads = ('I', 'II', 'V2')
-    two_leads = ('I', 'II')
-    LEAD_LISTS = (twelve_leads, six_leads, four_leads, three_leads, two_leads)
+    # twelve_leads = ('I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6')
+    # six_leads = ('I', 'II', 'III', 'aVR', 'aVL', 'aVF')
+    # four_leads = ('I', 'II', 'III', 'V2')
+    # three_leads = ('I', 'II', 'V2')
+    # two_leads = ('I', 'II')
+    # LEAD_LISTS = (twelve_leads, six_leads, four_leads, three_leads, two_leads)
+    
+    LEAD_LIST12 = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6']
     
     
-    LEAD_LISTS=[['I'],['II']]
+    # LEAD_LISTS=[['I'],['II'],['V1', 'V2'],['V2', 'V3'],LEAD_LIST12]
+    
+    # LEAD_LISTS=[['I'],['II']]
+    # LEAD_LISTS=[['III'],['aVR']]
+    # LEAD_LISTS=[['aVL'],['aVF']]
+    # LEAD_LISTS=[['V1'],['V2']]
+    # LEAD_LISTS=[['V3'],['V4']]
+    # LEAD_LISTS=[['V5'],['V6']]
+    # LEAD_LISTS=[['V1', 'V2'],['V2', 'V3']]
+    # LEAD_LISTS=[['V3', 'V4'],['V4', 'V5']]
+    # LEAD_LISTS=[['V5', 'V6'],['V1', 'V3']]
+    # LEAD_LISTS=[['V2', 'V4'],['V3', 'V5']]
+    LEAD_LISTS=[['V4', 'V6'],['V1', 'V4']]
+    
+    
 
 
     
@@ -72,7 +88,7 @@ class Config:
         DATA_PATH = '../../../cardio_shared/data'
     
     
-    DATA_RESAVE_PATH = '../data_resave'
+    DATA_RESAVE_PATH = '../d'
     
     RESULTS_PATH = '../results'
     
@@ -91,9 +107,9 @@ class Config:
     MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
     
-    # LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
-    # LR_CHANGES_LIST = [2,1,1,1]
-    # LOSS_FUNTIONS = [wce,wce,Challange_metric_loss(WEIGHTS),Challange_metric_loss(WEIGHTS)]
+    # LR_LIST = np.array([0.01,0.01])/10
+    # LR_CHANGES_LIST = [1,1]
+    # LOSS_FUNTIONS = [wce,Challange_metric_loss(WEIGHTS)]
     # MAX_EPOCH = np.sum(LR_CHANGES_LIST)
     
     

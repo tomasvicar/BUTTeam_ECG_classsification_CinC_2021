@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N code2
+#PBS -N code_11
 #PBS -q gpu
 #PBS -l select=1:ncpus=12:ngpus=1:mem=20gb:gpu_cap=cuda35:scratch_local=120gb
 #PBS -l walltime=24:00:00
@@ -10,7 +10,7 @@
 SINGULARITYFILE=/cvmfs/singularity.metacentrum.cz/NGC/PyTorch\:21.05-py3.SIF
 CODEDIR_ORIG=$PBS_O_WORKDIR
 DATADIR_ORIG=$PBS_O_WORKDIR/../data
-RESULTSDIR=$PBS_O_WORKDIR/../results2
+RESULTSDIR=$PBS_O_WORKDIR/../results_11
 SEED=42
 
 
