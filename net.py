@@ -345,7 +345,7 @@ class Net_addition_grow(nn.Module):
         self.attention = myAttention(int(lvl1_size*self.levels),output_size,self.levels)
         
         
-        
+        self.conv_fc = myConv(int(lvl1_size*self.levels),output_size,filter_size=1)
         
         ## weigths initialization wih xavier method
         for i, m in enumerate(self.modules()):
@@ -418,7 +418,20 @@ class Net_addition_grow(nn.Module):
             
         
         
-        x, a1, a2 = self.attention(x,remove_matrix)
+        # x, a1, a2 = self.attention(x,remove_matrix)
+        
+        
+        x[remove_matrix.repeat(1,list(x.size())[1],1)==1] = -np.Inf
+        x = F.adaptive_max_pool1d(x, 1)
+        x = self.conv_fc(x)
+        a1 = 1
+        a2 = 1
+        x = x.view(list(x.size())[:2])
+        
+        
+        
+        
+        
         
 
         x=torch.sigmoid(x)
