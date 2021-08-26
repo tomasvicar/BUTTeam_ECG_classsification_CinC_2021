@@ -32,7 +32,15 @@ class Config:
     # LEAD_LISTS=[['V3', 'V4'],['V4', 'V5']]
     # LEAD_LISTS=[['V5', 'V6'],['V1', 'V3']]
     # LEAD_LISTS=[['V2', 'V4'],['V3', 'V5']]
-    LEAD_LISTS=[['V4', 'V6'],['V1', 'V4']]
+    # LEAD_LISTS=[['V4', 'V6'],['V1', 'V4']]
+    
+    # LEAD_LISTS=[['I', 'II', 'III'],['I', 'V2']]
+    # LEAD_LISTS=[['II', 'V2'],['III', 'V2']]
+    # LEAD_LISTS=[['I', 'II', 'III','V1', 'V2', 'V3', 'V4', 'V5', 'V6'],['I', 'II', 'III','V1']]
+    # LEAD_LISTS=[['I', 'II', 'III', 'V3'],['I', 'II', 'III','V4']]
+    # LEAD_LISTS=[['I', 'II', 'III', 'V5'],['I', 'II', 'III','V6']]
+    # LEAD_LISTS=[['I', 'V5'],['II','V5']]
+    LEAD_LISTS=[['III', 'V5']]
     
     
 
