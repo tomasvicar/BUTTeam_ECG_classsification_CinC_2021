@@ -421,7 +421,9 @@ class Net_addition_grow(nn.Module):
         # x, a1, a2 = self.attention(x,remove_matrix)
         
         
-        x[remove_matrix.repeat(1,list(x.size())[1],1)==1] = -np.Inf
+        # x[remove_matrix.repeat(1,list(x.size())[1],1)==1] = -np.Inf
+        
+        
         x = F.adaptive_max_pool1d(x, 1)
         x = self.conv_fc(x)
         a1 = 1
