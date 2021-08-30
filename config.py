@@ -40,11 +40,14 @@ class Config:
     # LEAD_LISTS=[['I', 'II', 'III', 'V3'],['I', 'II', 'III','V4']]
     # LEAD_LISTS=[['I', 'II', 'III', 'V5'],['I', 'II', 'III','V6']]
     # LEAD_LISTS=[['I', 'V5'],['II','V5']]
-    LEAD_LISTS=[['III', 'V5']]
+    # LEAD_LISTS=[['III', 'V5']]
+    
+    # LEAD_LISTS=[['II', 'III'],['II', 'III','V1', 'V2', 'V3', 'V4', 'V5', 'V6']]
+    # LEAD_LISTS=[['II', 'III','V1'],['II', 'III', 'V2']]
+    # LEAD_LISTS=[['II', 'III','V3'],['II', 'III', 'V4']]
+    LEAD_LISTS=[['II', 'III','V5'],['II', 'III', 'V6']]
     
     
-
-
     
     EQUIVALENT_CLASSES_MAP  = {
         "733534002": "164909002",
