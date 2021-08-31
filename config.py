@@ -85,9 +85,9 @@ class Config:
     LR_LIST = np.array([0.01,0.001,0.0001,0.01,0.001,0.0001])/10
     
     
-    # LR_CHANGES_LIST = [40,20,10,20,15,10]
+    LR_CHANGES_LIST = [40,20,10,20,15,10]
     
-    LR_CHANGES_LIST = [10,5,2,5,2,2]
+    # LR_CHANGES_LIST = [10,5,2,5,2,2]
     
     
     
@@ -102,20 +102,20 @@ class Config:
     
     
     
-    LEVELS = 7
-    LVL1_SIZE = 6
-    OUTPUT_SIZE = len(SNOMED2IDX_MAP)
-    CONVS_IN_LAYER = 2
-    BLOCKS_IN_LVL = 2
-    FILTER_SIZE = 2
-    
-    
     # LEVELS = 7
-    # LVL1_SIZE = 8*6
+    # LVL1_SIZE = 6
     # OUTPUT_SIZE = len(SNOMED2IDX_MAP)
-    # CONVS_IN_LAYER = 3
-    # BLOCKS_IN_LVL = 3
+    # CONVS_IN_LAYER = 2
+    # BLOCKS_IN_LVL = 2
     # FILTER_SIZE = 3
+    
+    
+    LEVELS = 7
+    LVL1_SIZE = 8*3
+    OUTPUT_SIZE = len(SNOMED2IDX_MAP)
+    CONVS_IN_LAYER = 3
+    BLOCKS_IN_LVL = 3
+    FILTER_SIZE = 3
     
     
     

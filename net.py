@@ -340,12 +340,12 @@ class Net_addition_grow(nn.Module):
                     self.layers.append(myConv(int(lvl1_size*(lvl_num+1)), int(lvl1_size*(lvl_num+1)),filter_size=filter_size,dov=do))
 
 
-        self.conv_final=myConv(int(lvl1_size*(self.levels)), int(lvl1_size*self.levels),filter_size=filter_size)
+        self.conv_final = nn.Conv1d(int(lvl1_size*(self.levels)), int(lvl1_size*self.levels),kernel_size=filter_size,padding=1)
         
         self.attention = myAttention(int(lvl1_size*self.levels),output_size,self.levels)
         
         
-        self.conv_fc = myConv(int(lvl1_size*self.levels),output_size,filter_size=1)
+        self.conv_fc = nn.Conv1d(int(lvl1_size*self.levels),output_size,kernel_size=1)
         
         ## weigths initialization wih xavier method
         for i, m in enumerate(self.modules()):
@@ -421,7 +421,7 @@ class Net_addition_grow(nn.Module):
         # x, a1, a2 = self.attention(x,remove_matrix)
         
         
-        # x[remove_matrix.repeat(1,list(x.size())[1],1)==1] = -np.Inf
+        x[remove_matrix.repeat(1,list(x.size())[1],1)==1] = -np.Inf
         
         
         x = F.adaptive_max_pool1d(x, 1)

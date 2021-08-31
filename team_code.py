@@ -317,13 +317,19 @@ def run_model(model, header, recording):
 
 
 if __name__ == '__main__':
-    # logging.basicConfig(filename='debug.log',level=logging.INFO)
-    # try:
-    data_directory = Config.DATA_PATH
-    model_directory = Config.DATA_RESAVE_PATH
     
-    training_code(data_directory, model_directory)
-
+    
+    
+    logging.basicConfig(filename='debug.log',level=logging.INFO)
+    try:
+        
+        data_directory = Config.DATA_PATH
+        model_directory = Config.DATA_RESAVE_PATH
+        
+        training_code(data_directory, model_directory)
+    except Exception as e:
+        print(e)
+        logging.critical(e, exc_info=True)
     
     
 
